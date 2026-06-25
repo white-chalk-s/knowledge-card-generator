@@ -12,30 +12,37 @@
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <span class="sidebar-title">知识百科</span>
-    <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="关闭侧边栏">✕</button>
+    <div class="sidebar-header-actions">
+      <button class="sidebar-icon-btn" id="displayModeBtn" onclick="cycleDisplayMode()" title="切换展示模式">16:9</button>
+      <button class="sidebar-icon-btn" id="settingsToggle" onclick="toggleSettingsSidebar()" title="设置">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+    </div>
   </div>
-  <nav class="sidebar-nav" id="sidebarNav">
-    <div class="empty"><p style="font-size:.85rem">加载中...</p></div>
-  </nav>
-  <div class="sidebar-footer">
-    <button class="sidebar-btn primary" onclick="openNewCardModal()">+ 新建卡片</button>
-    <a class="sidebar-btn" href="/settings">设置</a>
-    <select id="displayMode" class="sidebar-select" onchange="setDisplayMode(this.value)" title="展示模式">
-      <option value="web">网页</option>
-      <option value="16:9">16:9 PPT</option>
-      <option value="4:3">4:3 PPT</option>
-    </select>
+
+  <div class="sidebar-body">
+    <nav class="sidebar-nav" id="sidebarNav">
+      <div class="empty"><p>加载中...</p></div>
+    </nav>
+    <div class="sidebar-settings" id="sidebarSettings">
+      <div class="ss-tabs">
+        <button class="ss-tab active" data-tab="template" onclick="switchSettingsTab('template')">模板</button>
+        <button class="ss-tab" data-tab="image" onclick="switchSettingsTab('image')">图片</button>
+        <button class="ss-tab" data-tab="icon" onclick="switchSettingsTab('icon')">图标</button>
+      </div>
+      <div class="ss-body" id="sidebarSettingsBody"></div>
+    </div>
   </div>
 </aside>
-
-<!-- Mobile overlay -->
-<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
 <!-- Content -->
 <main class="content-area" id="contentArea">
   <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="打开侧边栏">☰</button>
   <div class="ppt-stage"><iframe id="cardFrame" src="" title="知识卡片"></iframe></div>
 </main>
+
+<!-- Mobile overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
 <script src="/app.js"></script>
 <script>loadCards();</script>

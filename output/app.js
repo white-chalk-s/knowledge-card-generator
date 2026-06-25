@@ -1,4 +1,4 @@
-/* 知识百科平台 v3 — 公共脚本 */
+/* 知识百科平台 v4 — 双列侧边栏 */
 const API={
   async get(url){const r=await fetch(url);return r.json()},
   async post(url,data){const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});return r.json()},
@@ -14,8 +14,38 @@ function toast(msg,type='info'){
   setTimeout(()=>t.remove(),3000);
 }
 
+function showConfirm(title,message,onConfirm){
+  const overlay=document.createElement('div');overlay.className='modal-overlay';
+  overlay.innerHTML=`<div class="modal" style="max-width:380px">
+    <div class="modal-header"><h2>${title}</h2></div>
+    <div class="modal-body"><p style="font-size:.88rem;color:var(--color-text-secondary);line-height:1.6">${message}</p></div>
+    <div class="modal-footer"><button class="btn" id="cfmCancel">取消</button><button class="btn btn-danger" id="cfmOk">确认删除</button></div>
+  </div>`;
+  overlay.querySelector('#cfmCancel').onclick=()=>overlay.remove();
+  overlay.querySelector('#cfmOk').onclick=()=>{overlay.remove();onConfirm();};
+  overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove()});
+  document.body.appendChild(overlay);
+}
+
+function showContextMenu(e,callback){
+  e.preventDefault();
+  document.querySelectorAll('.ctx-menu').forEach(m=>m.remove());
+  const menu=document.createElement('div');menu.className='ctx-menu';
+  menu.innerHTML=`<button>删除</button>`;
+  menu.querySelector('button').onclick=()=>{menu.remove();callback();};
+  const x=Math.min(e.clientX,window.innerWidth-120);
+  const y=Math.min(e.clientY,window.innerHeight-50);
+  menu.style.left=x+'px';menu.style.top=y+'px';
+  document.body.appendChild(menu);
+  const close=ev=>{if(!menu.contains(ev.target)){menu.remove();document.removeEventListener('click',close);document.removeEventListener('contextmenu',close)}};
+  setTimeout(()=>{document.addEventListener('click',close);document.addEventListener('contextmenu',close)},0);
+}
+
 /* ── Sidebar ────────────────────────────── */
 let currentCardId=null;
+let _settingsOpen=false;
+let _currentSettingsTab='template';
+let _settingsDefault=null;
 
 function toggleSidebar(){
   const s=document.getElementById('sidebar');
@@ -25,19 +55,41 @@ function toggleSidebar(){
   o.classList.toggle('open',open);
 }
 
+function toggleSettingsSidebar(){
+  const s=document.getElementById('sidebar');
+  const btn=document.getElementById('settingsToggle');
+  _settingsOpen=!s.classList.contains('settings-open');
+  s.classList.toggle('settings-open',_settingsOpen);
+  btn.classList.toggle('active',_settingsOpen);
+  if(_settingsOpen)switchSettingsTab(_currentSettingsTab);
+}
+
+function switchSettingsTab(tab){
+  _currentSettingsTab=tab;
+  if(!_settingsOpen){toggleSettingsSidebar();return}
+  document.querySelectorAll('.ss-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  const body=document.getElementById('sidebarSettingsBody');
+  if(!body)return;
+  if(tab==='template')loadTemplates();
+  if(tab==='image')loadImageManager();
+  if(tab==='icon')loadIconPlaceholder();
+}
+
+/* ── Card Navigation ────────────────────── */
 async function loadCards(){
   const nav=document.getElementById('sidebarNav');
-  nav.innerHTML='<div class="skeleton skeleton-text" style="margin:8px 12px"></div><div class="skeleton skeleton-text short" style="margin:8px 12px"></div><div class="skeleton skeleton-text" style="margin:8px 12px"></div>';
+  nav.innerHTML='<div class="empty"><p>加载中...</p></div>';
   const data=await API.get('/api/cards');
   const cards=data.cards||[];
   if(!cards.length){
-    nav.innerHTML='<div class="empty"><div class="empty-icon"><img class="ico ico-lg" src="/api/icons/solid_glyph_enterprise_ui_svg/17_folder.svg" alt=""></div><p style="font-size:.85rem">暂无卡片</p><button class="empty-action" onclick="openNewCardModal()">+ 新建第一张卡片</button></div>';
+    nav.innerHTML='<div class="empty"><p>暂无卡片</p><button class="empty-action" onclick="openNewCardModal()">+ 新建卡片</button></div>';
     return;
   }
-  nav.innerHTML=cards.map(c=>`
-    <div class="sidebar-item${currentCardId===c.id?' active':''}" onclick="selectCard('${c.id}')">
+  const label=_settingsOpen?'<div class="nav-label">知识卡片</div>':'';
+  nav.innerHTML=label+cards.map(c=>`
+    <div class="sidebar-item${currentCardId===c.id?' active':''}" onclick="selectCard('${c.id}')" oncontextmenu="showContextMenu(event,()=>deleteCard('${c.id}','${c.title.replace(/'/g,"\\'")}'))">
       <span class="si-dot" style="background:${c.accent_color||'#0891b2'}"></span>
-      <span>${c.title}</span>
+      <span class="si-title">${c.title}</span>
       <span class="si-meta">${(c.ai_image_count||0)}/${c.image_count||0}</span>
     </div>
   `).join('');
@@ -48,18 +100,30 @@ function selectCard(id){
   currentCardId=id;
   document.getElementById('cardFrame').src='/card/'+id;
   const iframe=document.getElementById('cardFrame');
-  iframe.onload=()=>{if(_displayMode!=='web')resizePptStage(_displayMode);};
-  // Close mobile sidebar after selection
+  iframe.onload=()=>{if(_displayMode!=='web')resizePptStage(_displayMode)};
   if(window.innerWidth<=768)toggleSidebar();
-  // Refresh active state
   loadCards();
+  // Refresh image tab if settings open
+  if(document.getElementById('sidebar').classList.contains('settings-open')&&_currentSettingsTab==='image'){
+    loadCardImages(id);
+  }
 }
 
-/* ── Display Mode (Web / PPT) ──────────── */
+/* ── Display Mode ───────────────────────── */
 let _displayMode='web';
+const _displayModes=['web','16:9','4:3'];
+const _displayLabels={web:'Web','16:9':'16:9','4:3':'4:3'};
+
+function cycleDisplayMode(){
+  const idx=_displayModes.indexOf(_displayMode);
+  const next=_displayModes[(idx+1)%_displayModes.length];
+  setDisplayMode(next);
+}
 
 function setDisplayMode(mode){
   _displayMode=mode;
+  const btn=document.getElementById('displayModeBtn');
+  if(btn)btn.textContent=_displayLabels[mode]||mode;
   const ca=document.getElementById('contentArea');
   const stage=document.querySelector('.ppt-stage');
   const iframe=document.getElementById('cardFrame');
@@ -82,55 +146,35 @@ function resizePptStage(ratio){
   const stage=document.querySelector('.ppt-stage');
   const iframe=document.getElementById('cardFrame');
   if(!ca||!stage||!iframe)return;
-
   const [w,h]=ratio.split(':').map(Number);
   const targetRatio=w/h;
   const availW=ca.clientWidth;
   const availH=ca.clientHeight;
   const availRatio=availW/availH;
-
   let stageW,stageH;
-  if(availRatio>targetRatio){
-    stageH=availH;
-    stageW=availH*targetRatio;
-  }else{
-    stageW=availW;
-    stageH=availW/targetRatio;
-  }
-
+  if(availRatio>targetRatio){stageH=availH;stageW=availH*targetRatio}
+  else{stageW=availW;stageH=availW/targetRatio}
   const scale=stageW/(w*100);
   const iframeW=w*100;
   const iframeH=h*100;
-
-  stage.style.width=stageW+'px';
-  stage.style.height=stageH+'px';
-  stage.style.overflow='hidden';
-  stage.style.position='relative';
-  iframe.style.position='absolute';
-  iframe.style.top='0';
-  iframe.style.left='0';
-  iframe.style.width=iframeW+'px';
-  iframe.style.height=iframeH+'px';
-  iframe.style.transform='scale('+scale+')';
-  iframe.style.transformOrigin='top left';
-  iframe.style.border='none';
+  stage.style.width=stageW+'px';stage.style.height=stageH+'px';stage.style.overflow='hidden';stage.style.position='relative';
+  iframe.style.position='absolute';iframe.style.top='0';iframe.style.left='0';
+  iframe.style.width=iframeW+'px';iframe.style.height=iframeH+'px';
+  iframe.style.transform='scale('+scale+')';iframe.style.transformOrigin='top left';iframe.style.border='none';
   iframe.setAttribute('scrolling','no');
 }
 
-window.addEventListener('resize',()=>{
-  if(_displayMode!=='web')resizePptStage(_displayMode);
-});
+window.addEventListener('resize',()=>{if(_displayMode!=='web')resizePptStage(_displayMode)});
 
-// Restore saved mode on load
 (function(){
   const saved=localStorage.getItem('card-display-mode')||'web';
   _displayMode=saved;
-  const sel=document.getElementById('displayMode');
-  if(sel)sel.value=saved;
+  const btn=document.getElementById('displayModeBtn');
+  if(btn)btn.textContent=_displayLabels[saved]||saved;
   setTimeout(()=>setDisplayMode(saved),100);
 })();
 
-/* ── New Card Modal ────────────────────── */
+/* ── New Card Modal ──────────────────────── */
 function openNewCardModal(){
   const overlay=document.createElement('div');overlay.className='modal-overlay';
   overlay.innerHTML=`<div class="modal">
@@ -150,164 +194,143 @@ async function submitNewCard(){
   document.querySelector('.modal-overlay')?.remove();
 }
 
-/* ── Settings Page ─────────────────────── */
-async function initSettings(){
-  const hash=(location.hash.replace('#','')||'template').split('?')[0];
-  document.querySelectorAll('.st-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===hash));
-  document.querySelectorAll('.tab-content').forEach(t=>{
-    if(t.dataset.tab===hash){
-      t.style.display=hash==='template'?'flex':'block';
-    }else{
-      t.style.display='none';
-    }
-  });
-  if(hash==='template')loadTemplates();
-  if(hash==='image')loadImageManager();
-  if(hash==='icon')loadIconPlaceholder();
-}
-
-function switchTab(tab){
-  location.hash=tab;
-  initSettings();
-}
-
-/* Template tab */
+/* ── Template Tab ────────────────────────── */
 let _tplCache=null;
+let _selectedTplId=null;
 
 async function loadTemplates(){
-  const container=document.getElementById('templateContent');
-  container.innerHTML='<div class="skeleton skeleton-card"></div>';
-
-  const settings=await API.get('/api/settings');
+  const body=document.getElementById('sidebarSettingsBody');
+  if(!body)return;
+  const [settings,previewsData]=await Promise.all([API.get('/api/settings'),API.get('/api/previews')]);
   const templates=settings.templates||[{id:'产品介绍',file:'template-产品介绍.html',description:'Apple/Stripe风格'}];
+  const previewFiles=previewsData.files||[];
+  // Auto-match preview files to templates: name the file 模板id.png
+  for(const t of templates){
+    if(!t.preview){
+      const match=previewFiles.find(f=>f.stem===t.id);
+      if(match)t.preview=match.name;
+    }
+  }
   _tplCache=templates;
-  const current=settings.default_template||'产品介绍';
+  const current=settings.default_template||templates[0].id;
+  _selectedTplId=current;
+  _settingsDefault=current;
 
-  container.innerHTML=`
-    <div class="tpl-selector">
-      <div class="tpl-select-row">
-        <select id="tplSelect" onchange="onTemplateChange()">
-          ${templates.map(t=>`<option value="${t.id}" ${t.id===current?'selected':''}>${t.id} — ${t.description||''}</option>`).join('')}
-        </select>
-        <span class="tpl-current-badge" id="tplCurrentBadge">${current===templates.find(t=>t.id===current)?.id?'当前默认：'+current:''}</span>
+  // Collect tags
+  const allTags=[...new Set(templates.flatMap(t=>t.tags||[]))];
+  body.innerHTML=`
+    ${allTags.length?`<div class="tpl-tags" id="tplTags">
+      <button class="tpl-tag active" onclick="filterTemplates('all')" data-tag="all">全部</button>
+      ${allTags.map(t=>`<button class="tpl-tag" onclick="filterTemplates('${t}')" data-tag="${t}">${t}</button>`).join('')}
+    </div>`:''}
+    <div class="tpl-grid" id="tplGrid"></div>
+  `;
+  renderTplCards(templates,current);
+}
+
+function renderTplCards(templates,current){
+  const grid=document.getElementById('tplGrid');
+  if(!grid)return;
+  grid.innerHTML=templates.map(t=>`
+    <div class="tpl-card${t.id===_selectedTplId?' selected':''}" onclick="selectTplCard('${t.id}','${t.file||''}')" id="tplCard-${t.id.replace(/[^a-zA-Z0-9一-鿿]/g,'_')}" data-tags="${(t.tags||[]).join(',')}" oncontextmenu="showContextMenu(event,()=>deleteTemplate('${t.id}'))">
+      <div class="tpl-card-preview" id="tplPreview-${t.id.replace(/[^a-zA-Z0-9一-鿿]/g,'_')}" onclick="event.stopPropagation();uploadTplPreview('${t.id}')">
+        ${t.preview?`<img src="/previews/${t.preview}" alt="${t.id}" loading="lazy">`:`<span class="tpl-no-preview">点击上传预览图<br><span style="font-size:.6rem;opacity:.6">推荐 800×600</span></span>`}
+        <div class="tpl-upload-overlay"><span>${t.preview?'替换预览图':'上传预览图'}</span></div>
       </div>
-      <div class="tpl-actions">
-        <button class="btn btn-sm" onclick="previewTemplateSource(getSelectedTemplate().id,getSelectedTemplate().file)">查看源码</button>
-        <button class="btn btn-sm active-btn" id="tplSetDefaultBtn" onclick="setDefaultTemplate(getSelectedTemplate().id)">设为默认</button>
+      <div class="tpl-card-info">
+        <div class="tpl-card-name">${t.id}</div>
+        <div class="tpl-card-desc">${t.description||''}</div>
+        ${t.id===current?`<span class="tpl-card-badge">当前默认</span>`:''}
       </div>
     </div>
-    <div class="tpl-preview" id="preview-main"></div>
-  `;
+  `).join('');
 
-  updateTplUI(current);
-  loadTemplatePreview(current,templates.find(t=>t.id===current)?.file||templates[0].file);
+  templates.forEach(t=>{}); // previews loaded inline in HTML template
 }
 
-function getSelectedTemplate(){
-  const sel=document.getElementById('tplSelect');
-  const id=sel?.value||'';
-  return (_tplCache||[]).find(t=>t.id===id)||_tplCache[0]||{id:'产品介绍',file:'template-产品介绍.html'};
+function filterTemplates(tag){
+  document.querySelectorAll('.tpl-tag').forEach(b=>b.classList.toggle('active',b.dataset.tag===tag));
+  document.querySelectorAll('.tpl-card').forEach(card=>{
+    if(tag==='all'){card.style.display='';return}
+    const tags=(card.dataset.tags||'').split(',').filter(Boolean);
+    card.style.display=tags.includes(tag)?'':'none';
+  });
 }
 
-function onTemplateChange(){
-  const t=getSelectedTemplate();
-  const settingsDefault=document.getElementById('tplSetDefaultBtn')?.dataset?.default||'';
-  updateTplUI(settingsDefault);
-  loadTemplatePreview(t.id,t.file);
+function deleteCard(id,title){
+  showConfirm('删除知识卡片',`确认删除「${title}」？<br><small style="color:var(--color-text-tertiary)">卡片文件夹及所有图片将被彻底删除，不可恢复。</small>`,async()=>{
+    await API.del('/api/cards/'+id);
+    if(currentCardId===id)currentCardId=null;
+    toast('卡片已删除','success');
+    loadCards();
+  });
 }
 
-function updateTplUI(defaultId){
-  const t=getSelectedTemplate();
-  const badge=document.getElementById('tplCurrentBadge');
-  const btn=document.getElementById('tplSetDefaultBtn');
-  if(badge)badge.textContent=t.id===defaultId?'当前默认：'+defaultId:'';
-  if(btn){
-    btn.disabled=t.id===defaultId;
-    btn.textContent=t.id===defaultId?'当前默认':'设为默认';
-    btn.dataset.default=defaultId;
-  }
+function deleteTemplate(id){
+  showConfirm('删除模板',`确认从列表中移除模板「${id}」？<br><small style="color:var(--color-text-tertiary)">仅从设置中移除，不会删除模板文件。</small>`,async()=>{
+    await API.del('/api/template-settings/'+encodeURIComponent(id));
+    toast('模板已移除','success');
+    loadTemplates();
+  });
 }
 
-async function loadTemplatePreview(id,file){
+async function uploadTplPreview(id){
+  const input=document.createElement('input');input.type='file';input.accept='.png,.jpg,.jpeg,.webp';
+  input.onchange=async()=>{
+    const file=input.files[0];if(!file)return;
+    const fd=new FormData();fd.append('file',file);
+    await API.upload('/api/templates/'+encodeURIComponent(id)+'/preview',fd);
+    toast('预览图已上传','success');
+    loadTemplates();
+  };
+  input.click();
+}
+
+async function selectTplCard(id,file){
+  if(id===_settingsDefault)return;
+  await API.put('/api/settings',{default_template:id});
+  _settingsDefault=id;
+  _selectedTplId=id;
+  toast('默认模板: '+id,'success');
+  const templates=_tplCache||[];
+  renderTplCards(templates,_settingsDefault);
+}
+
+async function previewTemplateSource(){
+  const t=(_tplCache||[]).find(t=>t.id===_selectedTplId)||_tplCache[0];
+  if(!t)return;
   try{
-    const r=await fetch('/api/templates/'+encodeURIComponent(file));
-    const html=await r.text();
-    const filled=html
-      .replace(/{{标题}}/g,'示例知识卡片')
-      .replace(/{{主题色}}/g,'#0891b2')
-      .replace(/{{主题色深}}/g,'#0e7490')
-      .replace(/{{浅色背景}}/g,'#e0f2fe')
-      .replace(/{{分类标签}}/g,'知识百科')
-      .replace(/{{主标题第一行}}/g,'这是标题第一行')
-      .replace(/{{主标题第二行}}/g,'标题第二行')
-      .replace(/{{主标题高亮}}/g,'高亮关键词')
-      .replace(/{{一句话摘要，不超过两行。}}/g,'这是一段示例摘要文字，展示模板中副标题/摘要区域的排版效果。')
-      .replace(/{{主图URL}}/g,'')
-      .replace(/{{数字1}}/g,'128').replace(/{{标签1}}/g,'统计项一')
-      .replace(/{{数字2}}/g,'3.2K').replace(/{{标签2}}/g,'统计项二')
-      .replace(/{{数字3}}/g,'2024').replace(/{{标签3}}/g,'统计项三')
-      .replace(/{{数字4}}/g,'99%').replace(/{{标签4}}/g,'统计项四')
-      .replace(/{{分类1 英文}}/g,'Overview').replace(/{{分类2 英文}}/g,'Details').replace(/{{分类3 英文}}/g,'Analysis')
-      .replace(/{{标题第一行}}/g,'这是板块标题').replace(/{{标题第二行}}/g,'副标题展示')
-      .replace(/{{段落一。}}/g,'这段正文展示了模板中正文段落的排版效果，包括字号、行距和字体颜色的综合呈现，帮助预览实际内容的视觉效果。')
-      .replace(/{{段落二。}}/g,'第二段正文补充更多细节，展示多段落排版时的间距与节奏感。')
-      .replace(/{{标签A}}/g,'标签A').replace(/{{标签B}}/g,'标签B')
-      .replace(/{{图片URL}}/g,'').replace(/{{图片描述}}/g,'示例图片')
-      .replace(/{{引用文}}/g,'这是一段拉出的引用文字，用于在正文中突出某个观点。')
-      .replace(/{{卡片区标题}}/g,'关键特点一览').replace(/{{卡片区副标题}}/g,'这里有六个核心优势的详细介绍')
-      .replace(/{{分类}}/g,'分类').replace(/{{标题}}/g,'功能名称').replace(/{{描述，一到两行。}}/g,'功能描述文字，展示卡片内容的排版效果。')
-      .replace(/{{图标Emoji}}/g,'✦')
-      .replace(/{{书籍链接}}/g,'#').replace(/{{书籍封面URL}}/g,'')
-      .replace(/{{书名}}/g,'示例书籍名称').replace(/{{作者}}/g,'作者名').replace(/{{出版年份}}/g,'2024')
-      .replace(/{{一句话推荐理由。}}/g,'一句话推荐这本书的理由。')
-      .replace(/{{文章链接}}/g,'#').replace(/{{文章封面URL}}/g,'')
-      .replace(/{{文章标题}}/g,'相关文章标题').replace(/{{来源}}/g,'文章来源').replace(/{{日期}}/g,'2024-06')
-      .replace(/{{引用原文}}/g,'"这段引用文字展示了模板中引用区块的排版样式。"')
-      .replace(/{{引用来源}}/g,'—— 引用来源名称')
-      .replace(/{{URL}}/g,'#').replace(/{{来源名称}}/g,'来源链接')
-      .replace(/{{生成日期}}/g,new Date().toISOString().slice(0,10))
-      .replace(/\{\{[^}]+\}\}/g,'');
-    const el=document.getElementById('preview-main')||document.getElementById('preview-'+id);
-    if(el)el.innerHTML=`<iframe srcdoc="${filled.replace(/"/g,'&quot;')}" sandbox="allow-scripts"></iframe>`;
-  }catch(e){}
-}
-
-async function previewTemplateSource(id,file){
-  try{
-    const r=await fetch('/api/templates/'+encodeURIComponent(file));
+    const r=await fetch('/api/templates/'+encodeURIComponent(t.file));
     const html=await r.text();
     const overlay=document.createElement('div');overlay.className='modal-overlay';
-    overlay.innerHTML=`<div class="modal" style="max-width:720px"><div class="modal-header"><h2>${id} — 源码</h2><button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✕</button></div><div class="modal-body"><div class="code-preview">${html.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div></div></div>`;
+    overlay.innerHTML=`<div class="modal" style="max-width:720px"><div class="modal-header"><h2>${t.id} — 源码</h2><button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✕</button></div><div class="modal-body"><div class="code-preview">${html.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div></div></div>`;
     overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove()});
     document.body.appendChild(overlay);
   }catch(e){toast('加载模板失败','error')}
 }
 
-async function setDefaultTemplate(id){
-  await API.put('/api/settings',{default_template:id});
-  toast('默认模板已切换为: '+id,'success');
-  updateTplUI(id);
-}
-
-/* Image tab */
+/* ── Image Tab ──────────────────────────── */
 async function loadImageManager(){
-  const container=document.getElementById('imageContent');
-  const data=await API.get('/api/cards');
-  const cards=data.cards||[];
-  let sel=document.getElementById('imgCardSelect')?.value||currentCardId;
-  if(!sel&&cards.length)sel=cards[0].id;
-  currentCardId=sel;
-
-  container.innerHTML=`<div class="img-selector">
-    <select id="imgCardSelect" onchange="currentCardId=this.value;loadImageManager()">
-      ${cards.map(c=>`<option value="${c.id}" ${c.id===sel?'selected':''}>${c.title}</option>`).join('')}
-    </select>
-    <span style="font-size:.85rem;color:var(--color-text-tertiary)">共 ${cards.length} 张卡片</span>
-    <button class="btn-ghost" onclick="addImageToCard('${sel}')"><img class="ico" src="/api/icons/solid_glyph_enterprise_ui_svg/33_add_circle.svg" alt=""> 添加图片</button>
-  </div>
-  <div id="imgGrid"></div>`;
-  loadCardImages(sel);
-  container.addEventListener('paste', async(e)=>{
+  const body=document.getElementById('sidebarSettingsBody');
+  if(!body)return;
+  if(!currentCardId){
+    const data=await API.get('/api/cards');
+    const cards=data.cards||[];
+    if(cards.length)currentCardId=cards[0].id;
+  }
+  body.innerHTML=`
+    <div class="img-compact">
+      <div class="img-toolbar">
+        <span class="img-count" id="imgCount">0 张图片</span>
+        <button class="img-add-btn" onclick="addImageToCard('${currentCardId}')" title="添加图片">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+      </div>
+      <div id="imgList"></div>
+    </div>
+  `;
+  loadCardImages(currentCardId);
+  body.addEventListener('paste', async(e)=>{
     const items=e.clipboardData?.items||[];
     for(const item of items){
       if(item.type.startsWith('image/')){
@@ -324,29 +347,20 @@ async function loadImageManager(){
 }
 
 async function loadCardImages(cardId){
-  const grid=document.getElementById('imgGrid');
-  if(!grid)return;
-  grid.innerHTML='<div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div>';
+  const list=document.getElementById('imgList');
+  if(!list)return;
+  list.innerHTML='<div class="empty"><p>加载中...</p></div>';
   const meta=await API.get('/api/cards/'+cardId);
   const images=meta.images||[];
-  if(!images.length){grid.innerHTML='<div class="empty"><div class="empty-icon"><img class="ico ico-lg" src="/api/icons/solid_glyph_enterprise_ui_svg/21_eye.svg" alt=""></div><p style="font-size:.85rem">此卡片暂无图片</p><button class="empty-action" onclick="addImageToCard(\''+cardId+'\')">+ 上传图片</button></div>';return}
-  grid.className='img-grid';
-  grid.innerHTML=images.map((img,i)=>{
+  const cnt=document.getElementById('imgCount');if(cnt)cnt.textContent=images.length+' 张图片';
+  if(!images.length){list.innerHTML='<div class="empty"><p>暂无图片</p><button class="empty-action" onclick="addImageToCard(\''+cardId+'\')">+ 上传图片</button></div>';return}
+  list.className='img-grid-2';
+  list.innerHTML=images.map(img=>{
     const src=img.ai_file?('/card/'+cardId+'/'+img.ai_file):img.original_url;
-    const fname=img.ai_file?img.ai_file.split('/').pop():img.original_url.split('/').pop().split('?')[0];
-    return`<div class="img-card">
-      <div class="img-preview">
-        <img src="${src}" alt="${img.alt}" onerror="this.style.opacity='0.2'" loading="lazy">
-      </div>
-      <div class="img-info">
-        <div class="img-section">${img.section||'未分类'}</div>
-        <div class="img-alt">${img.alt||'无描述'}</div>
-        <div class="img-fname"><img class="ico" src="/api/icons/solid_glyph_enterprise_ui_svg/18_file.svg" alt=""> ${fname}</div>
-        <div class="img-actions">
-          <button onclick="copyImgUrl('${src}')"><img class="ico" src="/api/icons/solid_glyph_enterprise_ui_svg/46_link.svg" alt=""> 复制URL</button>
-          <button class="danger" onclick="deleteImg('${cardId}','${img.id}')"><img class="ico" src="/api/icons/solid_glyph_enterprise_ui_svg/28_trash.svg" alt=""> 删除</button>
-        </div>
-      </div>
+    const name=img.alt||'未命名';
+    return`<div class="img-card-mini" oncontextmenu="showContextMenu(event,()=>deleteImg('${cardId}','${img.id}'))">
+      <div class="img-thumb"><img src="${src}" alt="${name}" loading="lazy" onerror="this.style.opacity='0.2'"></div>
+      <span class="img-name" data-card="${cardId}" data-img="${img.id}" ondblclick="startImgRename(this)" title="双击编辑名称">${name.replace(/</g,'&lt;')}</span>
     </div>`;
   }).join('');
 }
@@ -355,11 +369,41 @@ function copyImgUrl(url){
   navigator.clipboard.writeText(url).then(()=>toast('URL已复制','success')).catch(()=>toast('复制失败','error'));
 }
 
+function startImgRename(span){
+  const cardId=span.dataset.card;
+  const imgId=span.dataset.img;
+  const oldName=span.textContent;
+  const input=document.createElement('input');
+  input.className='img-name-input';
+  input.value=oldName;
+  input.onblur=()=>finishImgRename(input,span,cardId,imgId);
+  input.onkeydown=(e)=>{if(e.key==='Enter')input.blur();if(e.key==='Escape'){span.style.display='';input.remove()}};
+  span.style.display='none';
+  span.parentNode.insertBefore(input,span.nextSibling);
+  input.focus();
+  input.select();
+}
+
+async function finishImgRename(input,span,cardId,imgId){
+  const newName=input.value.trim()||span.textContent;
+  span.textContent=newName;
+  span.style.display='';
+  input.remove();
+  if(newName!==span.dataset.orig)await API.put('/api/cards/'+cardId+'/images/'+imgId,{alt:newName});
+}
+
+async function renameImage(cardId,imgId,newName){
+  if(!newName.trim())return;
+  await API.put('/api/cards/'+cardId+'/images/'+imgId,{alt:newName.trim()});
+}
+
 async function deleteImg(cardId,imgId){
-  if(!confirm('确认删除此图片？'))return;
-  await API.del('/api/cards/'+cardId+'/images/'+imgId);
-  toast('图片已删除','success');
-  loadCardImages(cardId);
+  showConfirm('删除图片','确认删除此图片？<br><small style="color:var(--color-text-tertiary)">文件将被彻底删除，不可恢复。</small>',async()=>{
+    await API.del('/api/cards/'+cardId+'/images/'+imgId);
+    toast('图片已删除','success');
+    loadCardImages(cardId);
+    loadCards();
+  });
 }
 
 async function addImageToCard(cardId){
@@ -375,42 +419,43 @@ async function addImageToCard(cardId){
   input.click();
 }
 
-/* Icon tab */
+/* ── Icon Tab ──────────────────────────── */
 async function loadIconPlaceholder(){
-  const container=document.getElementById('iconContent');
-  container.innerHTML='<div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div>';
+  const body=document.getElementById('sidebarSettingsBody');
+  if(!body)return;
+  body.innerHTML='<div class="empty"><p>加载中...</p></div>';
   try{
     const data=await API.get('/api/icons');
     const styles=data.styles||[];
-    if(!styles.length){container.innerHTML='<div class="empty"><div class="empty-icon"><img class="ico ico-lg" src="/api/icons/solid_glyph_enterprise_ui_svg/15_star.svg" alt=""></div><p>暂无图标</p><p style="font-size:.75rem;color:var(--color-text-tertiary)">将 SVG 图标放入 icons/ 文件夹即可自动识别</p></div>';return}
-
+    if(!styles.length){body.innerHTML='<div class="empty"><p>暂无图标</p><p style="font-size:.68rem;color:var(--color-text-tertiary)">将 SVG 图标放入 icons/ 文件夹</p></div>';return}
     const labels={'enterprise_3d_blue_svg':'3D 蓝色','solid_glyph_enterprise_ui_svg':'纯色 Glyph','button_icons_svg_only':'按钮图标'};
     let currentStyle=styles[0].style;
 
     const render=()=>{
       const style=styles.find(s=>s.style===currentStyle)||styles[0];
       const icons=style.icons||[];
-      container.innerHTML=`<div class="icon-toolbar">
-        <div class="icon-style-tabs">
-          ${styles.map(s=>`<button class="icon-stab ${s.style===currentStyle?'active':''}" onclick="switchIconStyle('${s.style}')">${labels[s.style]||s.style}<span>${s.icons.length}</span></button>`).join('')}
+      body.innerHTML=`
+        <div class="icon-toolbar">
+          <div class="icon-style-tabs">
+            ${styles.map(s=>`<button class="icon-stab ${s.style===currentStyle?'active':''}" onclick="switchIconStyle('${s.style}')">${labels[s.style]||s.style}<span>${s.icons.length}</span></button>`).join('')}
+          </div>
+          <span class="icon-count">${icons.length} 个</span>
+          <button class="btn-ghost" style="font-size:.68rem;padding:4px 8px" onclick="copyAllIconNames()">复制名称</button>
         </div>
-        <span class="icon-count">共 ${icons.length} 个图标</span>
-        <button class="btn-ghost" onclick="copyAllIconNames()"><img class="ico" src="/api/icons/solid_glyph_enterprise_ui_svg/20_form_list.svg" alt=""> 复制全部名称</button>
-      </div>
-      <div class="icon-grid">
-        ${icons.map(icon=>{
-          const name=icon.name.replace(/^\d+_/,'');
-          return`<div class="icon-card" onclick="copyIconSvg('${icon.file}','${name}')" title="点击复制 SVG">
-            <div class="icon-preview"><img src="/api/icons/${icon.file}" alt="${name}" loading="lazy" onerror="this.style.display='none'"></div>
-            <div class="icon-name">${name}</div>
-          </div>`;
-        }).join('')}
-      </div>`;
+        <div class="icon-grid">
+          ${icons.map(icon=>{
+            const name=icon.name.replace(/^\d+_/,'');
+            return`<div class="icon-card" onclick="copyIconSvg('${icon.file}','${name}')" title="${name}">
+              <div class="icon-preview"><img src="/api/icons/${icon.file}" alt="${name}" loading="lazy" onerror="this.style.display='none'"></div>
+              <div class="icon-name">${name}</div>
+            </div>`;
+          }).join('')}
+        </div>`;
     };
 
     window.switchIconStyle=(style)=>{currentStyle=style;render();};
     render();
-  }catch(e){container.innerHTML='<div class="empty"><div class="empty-icon"><img class="ico ico-lg" src="/api/icons/solid_glyph_enterprise_ui_svg/15_star.svg" alt=""></div><p>加载失败</p></div>'}
+  }catch(e){body.innerHTML='<div class="empty"><p>加载失败</p></div>'}
 }
 
 async function copyIconSvg(file,name){
@@ -418,12 +463,12 @@ async function copyIconSvg(file,name){
     const r=await fetch('/api/icons/'+file);
     const svg=await r.text();
     await navigator.clipboard.writeText(svg);
-    toast('已复制 '+name+' SVG 代码','success');
+    toast('已复制 '+name,'success');
   }catch(e){toast('复制失败','error')}
 }
 
 function copyAllIconNames(){
   const cards=document.querySelectorAll('.icon-name');
   const names=Array.from(cards).map(c=>c.textContent).join('\n');
-  navigator.clipboard.writeText(names).then(()=>toast('已复制全部图标名称','success')).catch(()=>toast('复制失败','error'));
+  navigator.clipboard.writeText(names).then(()=>toast('已复制','success')).catch(()=>toast('复制失败','error'));
 }

@@ -226,6 +226,69 @@ def delete_image(card_id, img_id):
 TEMPLATE_DIR = Path(__file__).parent / "templates"
 
 
+@app.route("/api/templates/<path:template_id>/preview", methods=["POST"])
+def upload_template_preview(template_id):
+    """上传/替换模板预览图"""
+    file = request.files.get("file")
+    if not file:
+        return jsonify({"error": "missing file"}), 400
+
+    ext = Path(file.filename).suffix.lower()
+    if ext not in (".png", ".jpg", ".jpeg", ".webp"):
+        return jsonify({"error": "unsupported format"}), 400
+
+    previews_dir = OUTPUT / "previews"
+    previews_dir.mkdir(parents=True, exist_ok=True)
+    safe_name = f"{template_id}{ext}"
+
+    # Remove old preview with any extension
+    for old in previews_dir.glob(f"{template_id}.*"):
+        old.unlink()
+
+    file.save(str(previews_dir / safe_name))
+
+    # Update settings.json
+    settings = _read_json(SETTINGS_FILE)
+    for t in settings.get("templates", []):
+        if t["id"] == template_id:
+            t["preview"] = safe_name
+            break
+    _write_json(SETTINGS_FILE, settings)
+
+    return jsonify({"ok": True, "filename": safe_name})
+
+
+@app.route("/api/template-settings/<template_id>", methods=["DELETE"])
+def delete_template(template_id):
+    """从 settings.json 中移除模板条目"""
+    settings = _read_json(SETTINGS_FILE)
+    templates = settings.get("templates", [])
+    settings["templates"] = [t for t in templates if t["id"] != template_id]
+    if settings.get("default_template") == template_id and settings["templates"]:
+        settings["default_template"] = settings["templates"][0]["id"]
+    _write_json(SETTINGS_FILE, settings)
+    return jsonify({"ok": True})
+
+
+@app.route("/previews/<path:filename>")
+def serve_preview(filename):
+    """提供模板预览图"""
+    previews_dir = OUTPUT / "previews"
+    return send_from_directory(str(previews_dir), filename)
+
+
+@app.route("/api/previews", methods=["GET"])
+def list_previews():
+    """列出所有预览图文件"""
+    previews_dir = OUTPUT / "previews"
+    files = []
+    if previews_dir.exists():
+        for f in sorted(previews_dir.iterdir()):
+            if f.is_file() and f.suffix.lower() in (".png", ".jpg", ".jpeg", ".webp"):
+                files.append({"name": f.name, "stem": f.stem})
+    return jsonify({"files": files})
+
+
 @app.route("/api/templates/<path:filename>")
 def get_template(filename):
     """返回模板 HTML 源码"""
