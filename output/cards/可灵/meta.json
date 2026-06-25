@@ -1,0 +1,44 @@
+{
+  "id": "可灵",
+  "title": "可灵 AI 视频生成平台",
+  "category": "科技",
+  "tags": ["AI", "视频生成", "数字人", "图像生成"],
+  "template": "产品介绍",
+  "accent_color": "#2563eb",
+  "created_at": "2026-06-24T15:07:00",
+  "updated_at": "2026-06-24T15:26:00",
+  "status": "published",
+  "images": [
+    {
+      "id": "img-1",
+      "original_url": "https://image.aieva.cn/site/20240705/164330-6687b232ba661.png",
+      "local_file": null,
+      "ai_file": null,
+      "alt": "可灵视频生成界面",
+      "section": "hero",
+      "status": "external"
+    },
+    {
+      "id": "img-2",
+      "original_url": "https://feizhuke.com/wp-content/uploads/2024/07/ce70f-img_668780cd120ac.png",
+      "local_file": null,
+      "ai_file": null,
+      "alt": "数字人功能",
+      "section": "split-2",
+      "status": "external"
+    },
+    {
+      "id": "img-3",
+      "original_url": "https://feizhuke.com/wp-content/uploads/2024/07/2c219-img_6687807ff40de.png",
+      "local_file": null,
+      "ai_file": null,
+      "alt": "可图图像生成",
+      "section": "split-3",
+      "status": "external"
+    }
+  ],
+  "sources": [
+    {"title": "可灵 AI 官方网站", "url": "https://klingai.com/", "type": "official"},
+    {"title": "可灵 AI 产品介绍", "url": "https://www.aieva.cn/article/1234", "type": "article"}
+  ]
+}

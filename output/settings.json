@@ -1,0 +1,46 @@
+{
+  "default_template": "技术深度",
+  "default_accent_color": "#0891b2",
+  "templates": [
+    {
+      "id": "产品介绍",
+      "file": "template-产品介绍.html",
+      "description": "Apple/Stripe 风格产品介绍，渐变色主题"
+    },
+    {
+      "id": "极简报告",
+      "file": "template-极简报告.html",
+      "description": "Linear 风格极简报告，无阴影低对比，阅读优先"
+    },
+    {
+      "id": "技术深度",
+      "file": "template-技术深度.html",
+      "description": "Stripe 风格技术深度，高对比渐变，大胆留白"
+    },
+    {
+      "id": "杂志长文",
+      "file": "template-杂志长文.html",
+      "description": "编辑风格杂志长文，衬线字体，全幅大图"
+    },
+    {
+      "id": "农学家门户",
+      "file": "agronomist_portal_desktop_web_preview.html",
+      "description": "Agronomist 面板风格，薄荷绿配色，数据仪表盘布局"
+    },
+    {
+      "id": "通用门户线框",
+      "file": "generic_portal_wireframe_placeholder.html",
+      "description": "通用 Portal 线框占位，模块化区块布局，灵活组合"
+    },
+    {
+      "id": "通用门户页面",
+      "file": "preview.html",
+      "description": "CSS 变量体系，干净的三段式门户布局，Hero+卡片+列表"
+    },
+    {
+      "id": "粗黑招聘海报",
+      "file": "bold_recruitment_poster_wireframe_template.html",
+      "description": "黑白粗黑体海报风格，Impact 大标题，高对比，大胆留白"
+    }
+  ]
+}

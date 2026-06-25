@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>设置 — 知识百科</title>
+<link rel="stylesheet" href="/app.css">
+</head>
+<body style="flex-direction:column">
+
+<header class="settings-topbar">
+  <button class="stb-back" onclick="location.href='/'" title="返回首页" aria-label="返回首页"><img class="ico" src="/api/icons/solid_glyph_enterprise_ui_svg/35_arrow_left.svg" alt="返回"></button>
+  <span class="stb-title">设置</span>
+</header>
+
+<div class="settings-wrap">
+  <div class="settings-tabs">
+    <button class="st-tab active" data-tab="template" onclick="switchTab('template')"><img class="ico" src="/api/icons/solid_glyph_enterprise_ui_svg/18_file.svg" alt=""> 模板</button>
+    <button class="st-tab" data-tab="image" onclick="switchTab('image')"><img class="ico" src="/api/icons/solid_glyph_enterprise_ui_svg/21_eye.svg" alt=""> 图片</button>
+    <button class="st-tab" data-tab="icon" onclick="switchTab('icon')"><img class="ico" src="/api/icons/solid_glyph_enterprise_ui_svg/15_star.svg" alt=""> 图标</button>
+  </div>
+
+  <div class="tab-content" data-tab="template" id="templateContent"></div>
+  <div class="tab-content" data-tab="image" id="imageContent" style="display:none"></div>
+  <div class="tab-content" data-tab="icon" id="iconContent" style="display:none"></div>
+</div>
+
+<script src="/app.js"></script>
+<script>initSettings();</script>
+</body>
+</html>

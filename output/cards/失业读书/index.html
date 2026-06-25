@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>通用门户页面线框模板</title>
+  <style>
+    :root {
+      /* Typography */
+      --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", Arial, sans-serif;
+      --font-family-heading: var(--font-family-base);
+      --font-size-h1: 2.25rem;
+      --font-size-h2: 1.5rem;
+      --font-size-h3: 1.125rem;
+      --font-size-body: 1rem;
+      --font-size-small: 0.875rem;
+      --font-weight-bold: 700;
+      --font-weight-semibold: 600;
+      --font-weight-medium: 500;
+      --font-weight-regular: 400;
+      --line-height-tight: 1.2;
+      --line-height-normal: 1.6;
+      --line-height-relaxed: 1.75;
+      --letter-spacing-tight: -0.02em;
+      --letter-spacing-normal: 0;
+      --letter-spacing-wide: 0.02em;
+
+      /* Colors */
+      --color-bg: #f5f7f8;
+      --color-surface: #ffffff;
+      --color-surface-muted: #eef2f3;
+      --color-surface-dark: #1d2d29;
+      --color-title: #16211d;
+      --color-text: #3c4a45;
+      --color-text-muted: #72807b;
+      --color-border: #dbe3e0;
+      --color-accent: #2f8f66;
+      --color-accent-soft: #e8f4ee;
+      --color-inverse: #ffffff;
+
+      /* Spacing */
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --section-gap: var(--space-8);
+      --card-padding: var(--space-5);
+      --element-gap: var(--space-4);
+
+      /* Radius & shadow */
+      --radius-sm: 0.5rem;
+      --radius-md: 0.875rem;
+      --radius-lg: 1.125rem;
+      --shadow-sm: 0 4px 14px rgba(21, 35, 29, 0.06);
+      --shadow-md: 0 10px 30px rgba(21, 35, 29, 0.08);
+
+      /* Layout */
+      --container-width: 1280px;
+      --header-height: 4.5rem;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      font-family: var(--font-family-base);
+      font-size: 16px;
+      color: var(--color-text);
+      background: var(--color-bg);
+      line-height: var(--line-height-normal);
+      letter-spacing: var(--letter-spacing-normal);
+    }
+
+    body {
+      margin: 0;
+      background: var(--color-bg);
+      color: var(--color-text);
+    }
+
+    a {
+      color: var(--color-accent);
+      text-decoration: none;
+    }
+
+    .page {
+      min-height: 100vh;
+    }
+
+    .container {
+      width: min(100% - 2rem, var(--container-width));
+      margin-inline: auto;
+    }
+
+    .site-header {
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .site-header__inner {
+      min-height: var(--header-height);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: var(--space-6);
+    }
+
+    .brand {
+      font-size: var(--font-size-h2);
+      font-weight: var(--font-weight-bold);
+      line-height: var(--line-height-tight);
+      letter-spacing: var(--letter-spacing-tight);
+      color: var(--color-title);
+      white-space: nowrap;
+    }
+
+    .main-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-5);
+      align-items: center;
+    }
+
+    .nav-link {
+      font-size: var(--font-size-body);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-title);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .action-chip {
+      min-width: 2.5rem;
+      padding: var(--space-2) var(--space-3);
+      border: 1px solid var(--color-border);
+      border-radius: 999px;
+      background: var(--color-surface);
+      text-align: center;
+      font-size: var(--font-size-small);
+      color: var(--color-text-muted);
+    }
+
+    .section {
+      margin-top: var(--section-gap);
+    }
+
+    .market-strip {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      padding: var(--card-padding);
+    }
+
+    .market-strip__top {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--element-gap);
+      align-items: center;
+      margin-bottom: var(--space-4);
+    }
+
+    .eyebrow {
+      font-size: var(--font-size-small);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-muted);
+      letter-spacing: var(--letter-spacing-wide);
+    }
+
+    .inline-meta {
+      font-size: var(--font-size-small);
+      color: var(--color-text-muted);
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: var(--space-4);
+    }
+
+    .metric-card {
+      padding: var(--space-4);
+      background: var(--color-surface-muted);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+    }
+
+    .metric-card__label {
+      font-size: var(--font-size-small);
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-2);
+    }
+
+    .metric-card__value {
+      font-size: var(--font-size-h3);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-title);
+      line-height: var(--line-height-tight);
+      margin-bottom: var(--space-1);
+    }
+
+    .metric-card__delta {
+      font-size: var(--font-size-small);
+      color: var(--color-text-muted);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.65fr) minmax(260px, 1fr);
+      gap: var(--space-6);
+      align-items: stretch;
+    }
+
+    .card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .card--dark {
+      background: var(--color-surface-dark);
+      color: var(--color-inverse);
+      border-color: rgba(255,255,255,0.08);
+      box-shadow: var(--shadow-md);
+    }
+
+    .card__body {
+      padding: var(--card-padding);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-bottom: var(--space-4);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2rem;
+      padding: 0 var(--space-3);
+      border-radius: 999px;
+      background: var(--color-accent-soft);
+      color: var(--color-accent);
+      font-size: var(--font-size-small);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .card--dark .tag {
+      background: rgba(255,255,255,0.12);
+      color: var(--color-inverse);
+    }
+
+    h1, h2, h3, p {
+      margin: 0;
+    }
+
+    h1 {
+      font-family: var(--font-family-heading);
+      font-size: var(--font-size-h1);
+      line-height: var(--line-height-tight);
+      letter-spacing: var(--letter-spacing-tight);
+      font-weight: var(--font-weight-bold);
+    }
+
+    h2 {
+      font-family: var(--font-family-heading);
+      font-size: var(--font-size-h2);
+      line-height: 1.3;
+      font-weight: var(--font-weight-bold);
+      color: var(--color-title);
+      letter-spacing: var(--letter-spacing-tight);
+    }
+
+    h3 {
+      font-family: var(--font-family-heading);
+      font-size: var(--font-size-h3);
+      line-height: 1.35;
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-title);
+    }
+
+    p {
+      font-size: var(--font-size-body);
+      line-height: var(--line-height-normal);
+      color: var(--color-text);
+    }
+
+    .small-text {
+      font-size: var(--font-size-small);
+      line-height: 1.5;
+      color: var(--color-text-muted);
+    }
+
+    .card--dark p,
+    .card--dark .small-text,
+    .card--dark h1,
+    .card--dark h3 {
+      color: var(--color-inverse);
+    }
+
+    .img-placeholder {
+      width: 100%;
+      min-height: 12rem;
+      padding: var(--space-5);
+      border: 1.5px dashed rgba(255,255,255,0.34);
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.08);
+      color: inherit;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-size: var(--font-size-small);
+      line-height: 1.6;
+      word-break: break-all;
+    }
+
+    .card:not(.card--dark) .img-placeholder,
+    .topic-card .img-placeholder,
+    .story-card .img-placeholder,
+    .weather-card .img-placeholder,
+    .metric-card .img-placeholder {
+      border-color: var(--color-border);
+      background: var(--color-surface-muted);
+      color: var(--color-text-muted);
+    }
+
+    .hero-visual {
+      margin-bottom: var(--space-5);
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: var(--space-4);
+    }
+
+    .sidebar-list {
+      display: grid;
+      gap: var(--space-4);
+      height: 100%;
+    }
+
+    .story-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 132px 1fr;
+      min-height: 170px;
+    }
+
+    .story-card__body {
+      padding: var(--space-4);
+      display: grid;
+      align-content: start;
+      gap: var(--space-3);
+    }
+
+    .story-card__media {
+      padding: var(--space-4) 0 var(--space-4) var(--space-4);
+    }
+
+    .weather-block {
+      display: grid;
+      gap: var(--space-4);
+    }
+
+    .weather-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: var(--space-4);
+    }
+
+    .weather-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      box-shadow: var(--shadow-sm);
+      display: grid;
+      gap: var(--space-3);
+    }
+
+    .weather-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+    }
+
+    .topics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-6);
+    }
+
+    .topic-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .topic-card__body {
+      padding: var(--card-padding);
+      display: grid;
+      gap: var(--space-4);
+    }
+
+    .link-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      align-items: center;
+    }
+
+    .link-text {
+      font-size: var(--font-size-small);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .footer-note {
+      padding: var(--space-8) 0 var(--space-10);
+      text-align: center;
+      color: var(--color-text-muted);
+      font-size: var(--font-size-small);
+    }
+
+    @media (max-width: 768px) {
+      :root {
+        --font-size-h1: 1.75rem;
+        --font-size-h2: 1.25rem;
+        --font-size-h3: 1rem;
+        --section-gap: var(--space-6);
+        --card-padding: var(--space-4);
+      }
+
+      .container {
+        width: min(100% - 1rem, var(--container-width));
+      }
+
+      .site-header__inner {
+        grid-template-columns: 1fr;
+        align-items: start;
+        padding: var(--space-4) 0;
+      }
+
+      .main-nav,
+      .header-actions {
+        width: 100%;
+      }
+
+      .metric-grid,
+      .weather-grid,
+      .topics-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .story-card {
+        grid-template-columns: 1fr;
+      }
+
+      .story-card__media {
+        padding: var(--space-4) var(--space-4) 0;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .metric-grid,
+      .weather-grid,
+      .topics-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .market-strip__top,
+      .weather-meta,
+      .link-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <div class="brand">知识百科</div>
+
+        <nav class="main-nav" aria-label="主题导航">
+          <a class="nav-link" href="#">心理机制</a>
+          <a class="nav-link" href="#">社会功能</a>
+          <a class="nav-link" href="#">实证研究</a>
+          <a class="nav-link" href="#">个人叙事</a>
+        </nav>
+
+        <div class="header-actions">
+          <div class="action-chip">搜索</div>
+          <div class="action-chip">收藏</div>
+          <div class="action-chip">中</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="section market-strip" aria-labelledby="section-market-title">
+        <div class="market-strip__top">
+          <div>
+            <div class="eyebrow">关键数据 · Key Findings</div>
+          </div>
+          <div class="inline-meta">来源：McLean (2018) / Marienthal (1931) / PIAAC (2019) · <a href="#">查看全部</a></div>
+        </div>
+
+        <div class="metric-grid">
+          <article class="metric-card">
+            <div class="metric-card__label">正向思维习得率</div>
+            <div class="metric-card__value">60%</div>
+            <div class="metric-card__delta">▲ McLean 研究</div>
+          </article>
+          <article class="metric-card">
+            <div class="metric-card__label">男性失业读者占比</div>
+            <div class="metric-card__value">20%</div>
+            <div class="metric-card__delta">vs 女性 7%</div>
+          </article>
+          <article class="metric-card">
+            <div class="metric-card__label">Marienthal 借阅变化</div>
+            <div class="metric-card__value">−49%</div>
+            <div class="metric-card__delta">▼ 1929→1931</div>
+          </article>
+          <article class="metric-card">
+            <div class="metric-card__label">男性身份距离行为</div>
+            <div class="metric-card__value">27%</div>
+            <div class="metric-card__delta">▼ 拒绝"自-help读者"标签</div>
+          </article>
+          <article class="metric-card">
+            <div class="metric-card__label">开放型人格缓冲效应</div>
+            <div class="metric-card__value">+1σ</div>
+            <div class="metric-card__delta">▲ 维持阅读习惯</div>
+          </article>
+          <article class="metric-card">
+            <div class="metric-card__label">阅读疗法阶段</div>
+            <div class="metric-card__value">3 步</div>
+            <div class="metric-card__delta">认同 → 宣泄 → 洞察</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section hero-grid" aria-label="主内容区">
+        <article class="card card--dark">
+          <div class="card__body">
+            <div class="tag-row">
+              <span class="tag">核心洞见</span>
+              <span class="tag">心理学 · 社会学</span>
+            </div>
+
+            <div class="hero-visual">
+              <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=1200&h=600&fit=crop" alt="失业者在图书馆阅读" style="width:100%;border-radius:var(--radius-md);display:block" loading="lazy">
+            </div>
+
+            <div class="hero-copy">
+              <h1>失业不是懒散的同义词</h1>
+              <p>当旧的身份坍塌——「某公司工程师」「某部门经理」——阅读是一种重建。不是在逃避现实，而是在重新学习如何成为自己。McLean 对 134 位自-help 读者的研究发现，失业者阅读的动力不是消磨时间，而是维持「我还在成长」的自我叙事。这种叙事，是抵御身份焦虑最廉价也最有效的盔甲。</p>
+              <div class="link-row">
+                <a class="link-text" href="#">阅读完整研究 →</a>
+                <span class="small-text">Adult Education Quarterly, 2018</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <aside class="sidebar-list" aria-label="深度视角">
+          <article class="story-card">
+            <div class="story-card__media">
+              <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=320&h=220&fit=crop" alt="书籍与笔记" style="width:100%;height:100%;object-fit:cover;border-radius:0" loading="lazy">
+            </div>
+            <div class="story-card__body">
+              <span class="tag">身份认同工作</span>
+              <h3>「我不是那种看自-help 书的人」</h3>
+              <p class="small-text">27% 的男性读者刻意与「自-help读者」身份保持距离，尽管他们是实际消费者。失业男性的阅读背负双重污名：既要解释为什么失业，又要解释为什么读这类书。</p>
+              <a class="link-text" href="#">了解更多 →</a>
+            </div>
+          </article>
+
+          <article class="story-card">
+            <div class="story-card__media">
+              <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=320&h=220&fit=crop" alt="写作与思考" style="width:100%;height:100%;object-fit:cover;border-radius:0" loading="lazy">
+            </div>
+            <div class="story-card__body">
+              <span class="tag">隐藏课程</span>
+              <h3>正向思维的意外收获</h3>
+              <p class="small-text">60% 的读者报告学会了更积极地思考，即使这不是他们打开书的初衷。阅读暗含一套自我调节训练——识别负面模式、重构解释框架、建立成长叙事。</p>
+              <a class="link-text" href="#">了解更多 →</a>
+            </div>
+          </article>
+
+          <article class="story-card">
+            <div class="story-card__media">
+              <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=320&h=220&fit=crop" alt="人们围坐讨论" style="width:100%;height:100%;object-fit:cover;border-radius:0" loading="lazy">
+            </div>
+            <div class="story-card__body">
+              <span class="tag">情感连接</span>
+              <h3>「这让我觉得我不是一个人」</h3>
+              <p class="small-text">Danica，45 岁，失业女性。她说阅读创造的共情连接是社交断裂时期的精神缓冲——书不会问你的职业状态，不会评判你的空窗期。它只是在那里，等你准备好。</p>
+              <a class="link-text" href="#">了解更多 →</a>
+            </div>
+          </article>
+        </aside>
+      </section>
+
+      <section class="section weather-block" aria-labelledby="section-status-title">
+        <div class="weather-grid">
+          <article class="weather-card">
+            <div class="eyebrow">结构重建</div>
+            
+            <p class="small-text">每日阅读仪式替代了消失的工作日程。早上九点不再是开会，而是翻开昨天读到的那一页——这是最小单位的秩序感。</p>
+          </article>
+          <article class="weather-card">
+            <div class="eyebrow">能力感维持</div>
+            
+            <p class="small-text">「今天读完了第三章」取代了「今天完成了需求文档」。学习新知识持续向自己证明：我还在成长，我没有被定义为一纸离职证明。</p>
+          </article>
+          <article class="weather-card">
+            <div class="eyebrow">情绪调节</div>
+            
+            <p class="small-text">文学作品提供安全的情感宣泄空间。阅读疗法研究确认三个阶段：在文字中看到自己（认同）→ 体验情感释放（宣泄）→ 内化为行动框架（洞察）。</p>
+          </article>
+          <article class="weather-card">
+            <div class="eyebrow">社会连接</div>
+            
+            <p class="small-text">读书社群、线上共读、图书馆读书会——这些替代性的社会连接缓冲了失业带来的社交断裂。你在一个不需要解释自己职业状态的圈子里。</p>
+          </article>
+          <article class="weather-card">
+            <div class="eyebrow">身份重塑</div>
+            
+            <p class="small-text">从「失业者」到「正在学习的人」，身份标签的转换不是自欺欺人——它是在旧身份废墟上搭建的新脚手架，支撑你走到下一个真正的身份。</p>
+          </article>
+          <article class="weather-card">
+            <div class="eyebrow">未来投资</div>
+            
+            <p class="small-text">阅读积累的不是即时回报，是可迁移的人力资本。那个读了三个月经济学的人，可能已经在写商业计划书了。阅读是行动的前奏，不是逃避的借口。</p>
+          </article>
+        </div>
+
+        <div class="weather-meta">
+          <p class="small-text">六种机制：阅读作为失业期的心理基础设施。图片来源：Unsplash。</p>
+          <a class="link-text" href="#">查看全部研究 →</a>
+        </div>
+      </section>
+
+      <section class="section topics-grid" aria-label="深度观察">
+        <article class="topic-card">
+          <div class="topic-card__body">
+            <img src="https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?w=640&h=360&fit=crop" alt="旧工厂与图书馆" style="width:100%;border-radius:var(--radius-md) var(--radius-md) 0 0;display:block" loading="lazy">
+            <div>
+              <h2>Marienthal 悖论</h2>
+              <p class="small-text">1930 年代奥地利 Marienthal 工厂关闭后，图书馆借阅量暴跌 49%。长期失业导致的是「冷漠」而非积极自我提升——这是经典研究最具冲击力的发现。但 1983 年英国 Barnsley 的数据显示相反趋势：失业上升期借阅量不降反升。区别在哪里？时间长度和人格特质。短期失业激发学习动机，长期失业侵蚀意志。开放性人格是维持阅读习惯的关键缓冲变量。</p>
+            </div>
+            <a class="link-text" href="#">阅读完整研究 →</a>
+          </div>
+        </article>
+
+        <article class="topic-card">
+          <div class="topic-card__body">
+            <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?w=640&h=360&fit=crop" alt="男性在书店" style="width:100%;border-radius:var(--radius-md) var(--radius-md) 0 0;display:block" loading="lazy">
+            <div>
+              <h2>性别与阅读羞耻</h2>
+              <p class="small-text">加拿大研究发现，20% 的男性自-help读者处于失业状态，而女性仅 7%。但男性更倾向于用「只是随便看看」「朋友推荐的」来解释阅读行为。失业男性的阅读背负双重污名：失业本身的社会评判 +「看自-help书」的软弱标签。共享阅读小组可能是降低羞耻感的出路——丹麦的退休男性共享阅读实验已证实了这一点。</p>
+            </div>
+            <a class="link-text" href="#">阅读完整研究 →</a>
+          </div>
+        </article>
+
+        <article class="topic-card">
+          <div class="topic-card__body">
+            <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=640&h=360&fit=crop" alt="从阅读到行动" style="width:100%;border-radius:var(--radius-md) var(--radius-md) 0 0;display:block" loading="lazy">
+            <div>
+              <h2>从阅读到行动</h2>
+              <p class="small-text">阅读疗法的终点不是「感觉好多了」，而是行动准备。认同→宣泄→洞察这三个阶段，最终指向的是行为改变。那些在失业期间系统阅读的人，重返职场后的适应速度更快、起薪更高、职业满意度更强。不是因为书里有什么魔法，而是因为他们从未停止把自己当作「正在成长的人」。</p>
+            </div>
+            <a class="link-text" href="#">阅读完整研究 →</a>
+          </div>
+        </article>
+      </section>
+
+      <div class="footer-note">
+        知识卡片生成器 · 2026.06.25
+      </div>
+    </main>
+  </div>
+</body>
+</html>

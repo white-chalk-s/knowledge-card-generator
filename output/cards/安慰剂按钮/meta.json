@@ -1,0 +1,17 @@
+{
+  "id": "安慰剂按钮",
+  "title": "安慰剂按钮：你按下的那些键真的有用吗",
+  "category": "心理学 · 设计",
+  "tags": ["心理学", "感知控制", "设计", "电梯", "安慰剂效应", "日常设计"],
+  "accent_color": "#e53e3e",
+  "created_at": "2026-06-25T10:30:00",
+  "updated_at": "2026-06-25T10:30:00",
+  "status": "published",
+  "image_count": 3,
+  "ai_image_count": 3,
+  "images": [
+    {"id": "img-1", "original_url": "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=720&fit=crop&q=80", "alt": "电梯金属按钮面板特写", "section": "主视觉", "status": "external"},
+    {"id": "img-2", "original_url": "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=320&fit=crop&q=80", "alt": "堆叠的书本", "section": "延伸阅读", "status": "external"},
+    {"id": "img-3", "original_url": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=320&fit=crop&q=80", "alt": "研究笔记与文具", "section": "深度研究", "status": "external"}
+  ]
+}

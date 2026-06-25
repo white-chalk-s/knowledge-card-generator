@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>知识百科</title>
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <span class="sidebar-title">知识百科</span>
+    <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="关闭侧边栏">✕</button>
+  </div>
+  <nav class="sidebar-nav" id="sidebarNav">
+    <div class="empty"><p style="font-size:.85rem">加载中...</p></div>
+  </nav>
+  <div class="sidebar-footer">
+    <button class="sidebar-btn primary" onclick="openNewCardModal()">+ 新建卡片</button>
+    <a class="sidebar-btn" href="/settings">设置</a>
+    <select id="displayMode" class="sidebar-select" onchange="setDisplayMode(this.value)" title="展示模式">
+      <option value="web">网页</option>
+      <option value="16:9">16:9 PPT</option>
+      <option value="4:3">4:3 PPT</option>
+    </select>
+  </div>
+</aside>
+
+<!-- Mobile overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- Content -->
+<main class="content-area" id="contentArea">
+  <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="打开侧边栏">☰</button>
+  <div class="ppt-stage"><iframe id="cardFrame" src="" title="知识卡片"></iframe></div>
+</main>
+
+<script src="/app.js"></script>
+<script>loadCards();</script>
+</body>
+</html>

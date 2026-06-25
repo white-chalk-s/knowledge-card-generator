@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>安慰剂按钮 — 知识卡片</title>
+  <style>
+    :root {
+      --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", Arial, sans-serif;
+      --font-family-display: Impact, "Arial Black", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-size-h1: clamp(3.2rem, 12vw, 6.4rem);
+      --font-size-h2: clamp(2.25rem, 8vw, 4.2rem);
+      --font-size-h3: clamp(1rem, 3vw, 1.45rem);
+      --font-size-body: clamp(0.88rem, 2vw, 1rem);
+      --font-size-small: clamp(0.72rem, 1.8vw, 0.82rem);
+      --font-weight-black: 900;
+      --font-weight-bold: 800;
+      --font-weight-semibold: 700;
+      --font-weight-regular: 400;
+      --line-height-display: 0.92;
+      --line-height-title: 1.08;
+      --line-height-body: 1.55;
+      --line-height-small: 1.45;
+      --letter-spacing-tight: -0.05em;
+      --letter-spacing-normal: 0;
+      --letter-spacing-wide: 0.08em;
+      --color-page-bg: #dfe5e8;
+      --color-paper: #e8edf0;
+      --color-card: #f7f9fa;
+      --color-title: #050505;
+      --color-text: #222222;
+      --color-muted: #646c70;
+      --color-border: #111111;
+      --color-border-soft: #aab3b8;
+      --color-dark: #050505;
+      --color-dark-soft: #191919;
+      --color-inverse: #ffffff;
+      --color-accent: #e53e3e;
+      --color-accent-2: #ff6a4f;
+      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem; --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem;
+      --section-gap: var(--space-5);
+      --card-padding: var(--space-4);
+      --element-gap: var(--space-3);
+      --radius-none: 0; --radius-sm: 0.25rem;
+      --shadow-none: none;
+      --shadow-hard: 0 0.35rem 0 rgba(0, 0, 0, 0.18);
+      --poster-width: 430px;
+      --poster-padding: clamp(1.25rem, 4vw, 1.75rem);
+    }
+
+    * { box-sizing: border-box; }
+    html { margin: 0; font-family: var(--font-family-base); background: var(--color-page-bg); color: var(--color-text); line-height: var(--line-height-body); }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: start center; padding: var(--space-6); background: var(--color-page-bg); }
+    a { color: inherit; text-decoration: none; }
+
+    .poster { width: min(100%, var(--poster-width)); background: var(--color-paper); padding: var(--poster-padding); color: var(--color-text); box-shadow: var(--shadow-hard); }
+    .poster-rule { height: 0; border-top: 3px solid var(--color-border); margin-bottom: var(--space-2); }
+
+    .hero-heading { margin: 0; font-family: var(--font-family-display); font-size: var(--font-size-h1); line-height: var(--line-height-display); font-weight: var(--font-weight-black); letter-spacing: var(--letter-spacing-tight); color: var(--color-title); text-transform: uppercase; white-space: nowrap; }
+    .headline-strip { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: var(--space-2); margin-top: var(--space-2); margin-bottom: var(--section-gap); }
+    .headline-strip__main, .headline-strip__brand, .section-title, .micro-banner { background: var(--color-dark); color: var(--color-inverse); }
+    .headline-strip__main { padding: var(--space-1) var(--space-4); font-size: var(--font-size-h3); line-height: 1.2; font-weight: var(--font-weight-bold); text-align: center; letter-spacing: var(--letter-spacing-wide); }
+    .headline-strip__brand { padding: var(--space-1) var(--space-3); font-size: var(--font-size-small); line-height: 1.3; font-weight: var(--font-weight-semibold); white-space: nowrap; }
+
+    .visual-section { margin-bottom: var(--section-gap); }
+    .img-placeholder { width: 100%; min-height: 10rem; display: grid; place-items: center; padding: var(--space-4); border: 2px dashed var(--color-border-soft); background: rgba(255, 255, 255, 0.45); color: var(--color-muted); font-size: var(--font-size-small); line-height: var(--line-height-small); text-align: center; word-break: break-word; }
+    .img-placeholder--dark { min-height: 13.5rem; border-color: rgba(255, 255, 255, 0.48); background: var(--color-dark-soft); color: var(--color-inverse); }
+    .img-placeholder--qr { aspect-ratio: 1 / 1; min-height: auto; padding: var(--space-2); background: var(--color-card); color: var(--color-muted); }
+    .img-placeholder img, .img-placeholder--dark img, .img-placeholder--qr img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
+    .img-placeholder--dark, .img-placeholder--qr { position: relative; overflow: hidden; }
+
+    .main-slogan { margin: 0 0 var(--space-3); font-family: var(--font-family-display); font-size: var(--font-size-h2); line-height: var(--line-height-title); font-weight: var(--font-weight-black); letter-spacing: var(--letter-spacing-tight); color: var(--color-title); text-align: center; }
+    .micro-banner { display: grid; grid-template-columns: 34% 1fr; align-items: center; gap: var(--space-2); padding: var(--space-1) var(--space-2); margin-bottom: var(--section-gap); font-size: var(--font-size-small); line-height: 1.25; font-weight: var(--font-weight-semibold); }
+    .micro-banner__pattern { height: 0.9rem; border: 1px dashed rgba(255, 255, 255, 0.75); background: transparent; }
+
+    .job-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5) var(--space-6); margin-bottom: var(--section-gap); }
+    .job-card { background: transparent; color: var(--color-text); }
+    .section-title { display: block; width: fit-content; min-width: 72%; padding: var(--space-1) var(--space-3); margin: 0 auto var(--space-2); font-size: var(--font-size-h3); line-height: 1.2; font-weight: var(--font-weight-bold); text-align: center; }
+    .job-card p { margin: 0; font-size: var(--font-size-body); line-height: var(--line-height-body); color: var(--color-text); }
+    .card-thumb { width:100%; aspect-ratio:3/2; overflow:hidden; margin-bottom:var(--space-2); border:2px solid var(--color-border); }
+    .card-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+
+    .footer-area { display: grid; grid-template-columns: 1fr auto; gap: var(--space-4); align-items: end; }
+    .footer-copy { display: grid; gap: var(--space-1); }
+    .small-text { margin: 0; font-size: var(--font-size-small); line-height: var(--line-height-small); color: var(--color-muted); }
+    .qr-grid { display: grid; grid-template-columns: repeat(2, 4rem); gap: var(--space-3); align-items: start; }
+    .qr-item { display: grid; gap: var(--space-1); text-align: center; }
+    .qr-label { font-size: var(--font-size-small); line-height: 1.2; color: var(--color-text); }
+
+    @media (max-width: 768px) {
+      body { padding: var(--space-3); place-items: start center; }
+      .poster { box-shadow: var(--shadow-none); }
+      .headline-strip { grid-template-columns: 1fr; }
+      .headline-strip__brand { justify-self: end; }
+      .micro-banner { grid-template-columns: 1fr; }
+      .job-grid { grid-template-columns: 1fr; gap: var(--space-4); }
+      .footer-area { grid-template-columns: 1fr; align-items: start; }
+      .qr-grid { grid-template-columns: repeat(2, minmax(4rem, 1fr)); width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="poster" aria-label="安慰剂按钮知识卡片">
+    <div class="poster-rule"></div>
+
+    <header class="poster-header">
+      <h1 class="hero-heading">PLACEBO</h1>
+      <div class="headline-strip">
+        <div class="headline-strip__main">安慰剂按钮</div>
+        <div class="headline-strip__brand">知识百科</div>
+      </div>
+    </header>
+
+    <section class="visual-section" aria-label="电梯按钮面板">
+      <div class="img-placeholder img-placeholder--dark">
+        <img src="https://images.unsplash.com/photo-1562654501-9a587e8638d8?w=720&fit=crop&q=80" alt="电梯楼层按钮面板特写，金属按键排列" loading="lazy">
+      </div>
+    </section>
+
+    <section class="slogan-section" aria-label="核心口号">
+      <h2 class="main-slogan">按下去&ne;起作用</h2>
+      <div class="micro-banner">
+        <div class="micro-banner__pattern" aria-label="装饰分隔线"></div>
+        <div>你以为在控制 其实只是在感觉好一点</div>
+      </div>
+    </section>
+
+    <section class="job-grid" aria-label="四类安慰剂按钮">
+      <article class="job-card">
+        <div class="card-thumb"><img src="https://images.unsplash.com/photo-1674929983141-dbf42974f66f?w=400&fit=crop&q=80" alt="电梯楼层按钮面板" loading="lazy"></div>
+        <h3 class="section-title">电梯关门键</h3>
+        <p>1990 年美国 ADA 法案规定电梯门必须保持开启至少 3 秒。厂商直接拔掉关门键的线——纽约市调查显示，真正有效的关门按钮不到 5%，仅在消防员钥匙模式下才工作。</p>
+      </article>
+
+      <article class="job-card">
+        <div class="card-thumb"><img src="https://images.unsplash.com/photo-1540746285203-d321fd84d1f9?w=400&fit=crop&q=80" alt="黄色人行道过街按钮" loading="lazy"></div>
+        <h3 class="section-title">人行道按钮</h3>
+        <p>2004 年纽约市 3250 个过街按钮中 77% 是摆设。2016 年全市有效按钮仅剩约 100 个。绝大多数路口的信号灯按固定周期运行，按压只在凌晨低峰时段才真正触发响应。</p>
+      </article>
+
+      <article class="job-card">
+        <div class="card-thumb"><img src="https://images.unsplash.com/photo-1545259742-b4fd8fea67e4?w=400&fit=crop&q=80" alt="手指调节墙上恒温器" loading="lazy"></div>
+        <h3 class="section-title">办公室恒温器</h3>
+        <p>ACHR News 行业调查：72% 的暖通技师承认安装过假恒温器。一位技师装的假温控器从 1987 年运行至今——服务电话消失了，因为员工觉得自己能调节温度了。</p>
+      </article>
+
+      <article class="job-card">
+        <div class="card-thumb"><img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&fit=crop&q=80" alt="人脑神经网络艺术图" loading="lazy"></div>
+        <h3 class="section-title">感知控制</h3>
+        <p>1975 年 Ellen Langer 在哈佛发现：即使按一个毫无作用的按钮，人对噪音的耐受度也显著提升。1976 年养老院实验更惊人——有选择权的老人 18 个月内死亡率减半（30%→15%）。控制感本身就是药。</p>
+      </article>
+    </section>
+
+    <footer class="footer-area" aria-label="延伸阅读">
+      <div class="footer-copy">
+        <p class="small-text">Ellen Langer · The Illusion of Control (1975)</p>
+        <p class="small-text">NYC 调查：77% 人行道按钮不工作</p>
+        <p class="small-text">国内电梯关门键：仍然真实有效</p>
+        <a class="small-text" href="https://www.nytimes.com/2016/10/28/nyregion/placebo-buttons.html" target="_blank">NYT: Placebo Buttons →</a>
+      </div>
+    </footer>
+  </main>
+</body>
+</html>
