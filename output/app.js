@@ -233,9 +233,9 @@ function renderTplCards(templates,current){
   if(!grid)return;
   grid.innerHTML=templates.map(t=>`
     <div class="tpl-card${t.id===_selectedTplId?' selected':''}" onclick="selectTplCard('${t.id}','${t.file||''}')" id="tplCard-${t.id.replace(/[^a-zA-Z0-9一-鿿]/g,'_')}" data-tags="${(t.tags||[]).join(',')}" oncontextmenu="showContextMenu(event,()=>deleteTemplate('${t.id}'))">
-      <div class="tpl-card-preview" id="tplPreview-${t.id.replace(/[^a-zA-Z0-9一-鿿]/g,'_')}" onclick="event.stopPropagation();uploadTplPreview('${t.id}')">
-        ${t.preview?`<img src="/previews/${t.preview}" alt="${t.id}" loading="lazy">`:`<span class="tpl-no-preview">点击上传预览图<br><span style="font-size:.6rem;opacity:.6">推荐 800×600</span></span>`}
-        <div class="tpl-upload-overlay"><span>${t.preview?'替换预览图':'上传预览图'}</span></div>
+      <div class="tpl-card-preview" id="tplPreview-${t.id.replace(/[^a-zA-Z0-9一-鿿]/g,'_')}">
+        ${t.preview?`<img src="/previews/${t.preview}" alt="${t.id}" loading="lazy">`:`<span class="tpl-no-preview">暂无预览图<br><span style="font-size:.6rem;opacity:.6">推荐 800×600</span></span>`}
+        <button class="tpl-upload-btn" onclick="event.stopPropagation();uploadTplPreview('${t.id}')" title="${t.preview?'替换预览图':'上传预览图'}">${t.preview?'替换':'上传'}</button>
       </div>
       <div class="tpl-card-info">
         <div class="tpl-card-name">${t.id}</div>

@@ -1,0 +1,16 @@
+{
+  "id": "忙时效率高",
+  "title": "为什么忙的时候效率高，空闲时反而读不进去",
+  "category": "心理学 · 时间管理",
+  "tags": ["心理学", "效率", "时间管理", "帕金森定律", "决策疲劳"],
+  "accent_color": "#c4934e",
+  "created_at": "2026-06-25T12:00:00",
+  "updated_at": "2026-06-25T12:00:00",
+  "status": "published",
+  "image_count": 2,
+  "ai_image_count": 0,
+  "images": [
+    {"id": "img-1", "original_url": "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=720&q=80", "alt": "安静阅读角落，木质书桌与暖光", "section": "主视觉", "status": "external"},
+    {"id": "img-2", "original_url": "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=600&q=80", "alt": "沙漏，象征时间约束", "section": "时间概念", "status": "external"}
+  ]
+}

@@ -1,62 +1,34 @@
 {
-  "default_template": "技术深度",
+  "default_template": "暗色金融SaaS",
   "default_accent_color": "#0891b2",
   "templates": [
-    {
-      "id": "产品介绍",
-      "file": "template-产品介绍.html",
-      "description": "Apple/Stripe 风格产品介绍，渐变色主题",
-      "tags": ["网页"],
-      "preview": "产品介绍.png"
-    },
-    {
-      "id": "极简报告",
-      "file": "template-极简报告.html",
-      "description": "Linear 风格极简报告，无阴影低对比，阅读优先",
-      "tags": ["网页"],
-      "preview": ""
-    },
-    {
-      "id": "技术深度",
-      "file": "template-技术深度.html",
-      "description": "Stripe 风格技术深度，高对比渐变，大胆留白",
-      "tags": ["网页"],
-      "preview": "技术深度.png"
-    },
-    {
-      "id": "杂志长文",
-      "file": "template-杂志长文.html",
-      "description": "编辑风格杂志长文，衬线字体，全幅大图",
-      "tags": ["杂志"],
-      "preview": ""
-    },
-    {
-      "id": "农学家门户",
-      "file": "agronomist_portal_desktop_web_preview.html",
-      "description": "Agronomist 面板风格，薄荷绿配色，数据仪表盘布局",
-      "tags": ["网页"],
-      "preview": ""
-    },
-    {
-      "id": "通用门户线框",
-      "file": "generic_portal_wireframe_placeholder.html",
-      "description": "通用 Portal 线框占位，模块化区块布局，灵活组合",
-      "tags": ["网页"],
-      "preview": ""
-    },
-    {
-      "id": "通用门户页面",
-      "file": "preview.html",
-      "description": "CSS 变量体系，干净的三段式门户布局，Hero+卡片+列表",
-      "tags": ["网页"],
-      "preview": ""
-    },
     {
       "id": "粗黑招聘海报",
       "file": "bold_recruitment_poster_wireframe_template.html",
       "description": "黑白粗黑体海报风格，Impact 大标题，高对比，大胆留白",
-      "tags": ["海报"],
-      "preview": ""
+      "tags": [
+        "海报"
+      ],
+      "preview": "粗黑招聘海报.png"
+    },
+    {
+      "id": "暗色金融SaaS",
+      "file": "dark_finance_saas_fixed_slot_template.html",
+      "description": "暗色金融SaaS固定槽位模板，1440×6800 像素级绝对定位，每个区域尺寸/位置锁定，只替换内容",
+      "tags": [
+        "网页",
+        "固定槽位"
+      ],
+      "preview": "暗色金融SaaS.png"
+    },
+    {
+      "id": "软编辑杂志",
+      "file": "soft_editorial_journal_landing_preview.html",
+      "description": "暖色杂志编辑风格，衬线标题+羊毛白背景，数据卡片+趋势面板+桌面预览",
+      "tags": [
+        "杂志"
+      ],
+      "preview": "软编辑杂志.png"
     }
   ]
 }

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dark Finance SaaS Fixed Slot Template</title>
+  <style>
+    :root {
+      --canvas-w: 1440px;
+      --canvas-h: 6800px;
+      --bg: #030304;
+      --bg-2: #07070a;
+      --card: #0c0c11;
+      --card-2: #111119;
+      --line: rgba(255,255,255,0.09);
+      --line-strong: rgba(255,255,255,0.16);
+      --title: #f6f7fb;
+      --text: #b7bac7;
+      --muted: #6f7383;
+      --accent: #8d7cff;
+      --accent-2: #c4b8ff;
+      --success: #4de39a;
+      --dark-text: #ffffff;
+      --font: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --shadow-glow: 0 0 80px rgba(126,103,255,.18), 0 24px 80px rgba(0,0,0,.55);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin:0; min-height:100%; background:#000; font-family:var(--font); }
+    body { overflow-x:auto; }
+
+    /* 固定画布：所有内容槽位都按 1440 × 6800 设计稿坐标锁死 */
+    .canvas {
+      position: relative;
+      width: var(--canvas-w);
+      height: var(--canvas-h);
+      margin: 0 auto;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 70% 7%, rgba(116,94,255,.18), transparent 420px),
+        radial-gradient(circle at 32% 41%, rgba(116,94,255,.10), transparent 360px),
+        linear-gradient(180deg, #030304 0%, #050507 46%, #030304 100%);
+      color: var(--text);
+    }
+
+    .slot, .section, .card, .img-placeholder, .line, .vline, .button, .pill {
+      position: absolute;
+      overflow: hidden;
+    }
+
+    .text { color: var(--text); }
+    .title { color: var(--title); font-weight: 560; letter-spacing: -0.055em; }
+    .h1 { font-size: 68px; line-height: 0.98; }
+    .h2 { font-size: 38px; line-height: 1.08; letter-spacing: -0.045em; }
+    .h3 { font-size: 22px; line-height: 1.16; letter-spacing: -0.035em; }
+    .body { font-size: 17px; line-height: 1.55; color: var(--text); }
+    .small { font-size: 13px; line-height: 1.5; color: var(--muted); }
+    .tiny { font-size: 11px; line-height: 1.45; color: var(--muted); }
+    .label { font-size: 12px; line-height: 1; color: var(--accent-2); letter-spacing: .12em; text-transform: uppercase; font-weight: 700; }
+    .number { color: var(--title); font-weight: 600; letter-spacing: -0.045em; }
+
+    .clamp2, .clamp3, .clamp4, .clamp5 {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      text-overflow: ellipsis;
+    }
+    .clamp2 { -webkit-line-clamp: 2; }
+    .clamp3 { -webkit-line-clamp: 3; }
+    .clamp4 { -webkit-line-clamp: 4; }
+    .clamp5 { -webkit-line-clamp: 5; }
+
+    .section { left: 128px; width: 1184px; }
+    .section-bg { position:absolute; left:128px; width:1184px; border-top:1px solid var(--line); }
+    .card { background: rgba(11,11,16,.86); border: 1px solid var(--line); border-radius: var(--radius-md); }
+    .card-dark { background: rgba(8,8,12,.92); }
+    .line { height: 1px; background: var(--line); }
+    .vline { width: 1px; background: var(--line); }
+
+    .img-placeholder {
+      object-fit: cover;
+      border-radius: var(--radius-md);
+      background:
+        linear-gradient(135deg, rgba(141,124,255,.12), rgba(255,255,255,.025)),
+        rgba(8,8,13,.9);
+      box-shadow: inset 0 0 40px rgba(141,124,255,.08);
+    }
+    .img-placeholder[src=""],
+    .img-placeholder:not([src]) {
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: rgba(210,212,232,.48);
+      font-size: 13px;
+      line-height: 1.55;
+      border: 1px dashed rgba(196,184,255,.32);
+      object-fit: none;
+    }
+
+    .button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 42px;
+      padding: 0 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .button-primary { background: #f6f7fb; color: #07070a; }
+    .button-secondary { background: transparent; color: #f6f7fb; border: 1px solid rgba(255,255,255,.18); }
+    .button-dark { background: #0f0f15; color: #f6f7fb; border: 1px solid rgba(255,255,255,.13); }
+    .pill { border: 1px solid var(--line); border-radius: 999px; height: 30px; display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--text); }
+
+    .logo-word { color: var(--title); font-size: 20px; font-weight: 540; letter-spacing: -0.025em; }
+    .nav-link { color: var(--text); font-size: 13px; text-decoration:none; white-space:nowrap; }
+    .partner { color: #d8d9e4; font-size: 15px; font-weight: 560; text-align:center; }
+
+    .feature-card-title { color: var(--title); font-size: 15px; font-weight: 560; }
+    .feature-card-text { color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .quote-title { color: var(--title); font-size: 18px; font-weight: 540; letter-spacing: -0.03em; }
+    .quote-text { color: #a9acb9; font-size: 14px; line-height: 1.55; }
+    .price-title { color: var(--title); font-size: 20px; font-weight: 540; letter-spacing: -0.035em; }
+    .price-num { color: var(--title); font-size: 15px; font-weight: 540; }
+    .faq-q { color: var(--title); font-size: 15px; font-weight: 540; }
+    .faq-a { color: var(--muted); font-size: 12px; line-height: 1.5; }
+
+    @media (max-width: 768px) {
+      .canvas { transform: scale(.52); transform-origin: top left; margin: 0; }
+      body { width: calc(var(--canvas-w) * .52); height: calc(var(--canvas-h) * .52); overflow-x: hidden; }
+    }
+  </style>
+</head>
+<body>
+  <main class="canvas">
+    <!-- Header：固定导航 1440×80 -->
+    <div class="slot logo-word" style="left:128px; top:28px; width:180px; height:28px;" data-field="品牌名称" data-type="text">知识百科</div>
+    <a class="slot nav-link" style="left:760px; top:31px; width:74px; height:20px;" href="https://book.douban.com/subject/30248320/" data-field="链接1_URL" data-type="link">牛奶可乐经济学</a>
+    <a class="slot nav-link" style="left:852px; top:31px; width:70px; height:20px;" href="https://book.douban.com/subject/25803319/" data-field="链接2_URL" data-type="link">卧底经济学</a>
+    <a class="slot nav-link" style="left:940px; top:31px; width:56px; height:20px;" href="" data-field="链接3_URL" data-type="link">日常经济学</a>
+    <a class="slot nav-link" style="left:1012px; top:31px; width:62px; height:20px;" href="" data-field="链接4_URL" data-type="link">定价心理学</a>
+    <a class="button button-dark" style="left:1190px; top:20px; width:84px;" href="" data-field="链接5_URL" data-type="link">了解更多</a>
+
+    <!-- Hero：左文案 + 右产品截图，区域固定 -->
+    <div class="section-bg" style="top:80px; height:660px;"></div>
+    <h1 class="slot title h1 clamp3" style="left:170px; top:192px; width:560px; height:215px;" data-field="标题" data-type="text">一杯豆浆凭什么卖 2 元</h1>
+    <p class="slot body clamp4" style="left:170px; top:430px; width:520px; height:110px;" data-field="段落一" data-type="richtext">早餐店一杯豆浆卖 2 元，但豆浆粉批发成本极低（一杯几分钱），凭什么？不是因为成本高，而是市场一致默契 + 信息不对称。豆浆是早餐店里最省事、毛利最高的产品。</p>
+    <a class="button button-primary" style="left:170px; top:580px; width:116px;" href="" data-field="链接6_URL" data-type="link">查看完整分析</a>
+    <a class="button button-secondary" style="left:302px; top:580px; width:126px;" href="" data-field="链接7_URL" data-type="link">延伸阅读</a>
+    <!-- 主视觉产品截图 520×390：放仪表盘首屏图，只替换图片，不改变位置 -->
+    <img class="img-placeholder" style="left:770px; top:140px; width:500px; height:430px;" src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&q=80" alt="热饮特写" data-field="图片1_URL" data-type="image">
+
+    <!-- Partner strip：固定品牌墙 -->
+    <div class="section-bg" style="top:740px; height:265px;"></div>
+    <div class="slot title h3" style="left:0; top:824px; width:1440px; height:32px; text-align:center;" data-field="标题2" data-type="text">一杯豆浆的成本结构</div>
+    <div class="slot partner" style="left:128px; top:908px; width:120px; height:26px;" data-field="合作品牌1" data-type="text">豆浆粉 ¥0.15</div>
+    <div class="slot partner" style="left:274px; top:908px; width:120px; height:26px;" data-field="合作品牌2" data-type="text">杯+封口 ¥0.20</div>
+    <div class="slot partner" style="left:420px; top:908px; width:120px; height:26px;" data-field="合作品牌3" data-type="text">分摊房租 ¥0.67</div>
+    <div class="slot partner" style="left:566px; top:908px; width:120px; height:26px;" data-field="合作品牌4" data-type="text">总成本 ¥1.10</div>
+    <div class="slot partner" style="left:712px; top:908px; width:120px; height:26px;" data-field="合作品牌5" data-type="text">售价 ¥2.00</div>
+    <div class="slot partner" style="left:858px; top:908px; width:120px; height:26px;" data-field="合作品牌6" data-type="text">每杯净利 ¥0.90</div>
+    <div class="slot partner" style="left:1004px; top:908px; width:120px; height:26px;" data-field="合作品牌7" data-type="text">净利润率 45%</div>
+    <div class="slot partner" style="left:1150px; top:908px; width:120px; height:26px;" data-field="合作品牌8" data-type="text">75-85% 毛利率</div>
+
+    <!-- Feature tabs：四个功能入口卡片，位置固定 -->
+    <div class="card" style="left:128px; top:1005px; width:296px; height:118px;"></div>
+    <div class="slot feature-card-title clamp1" style="left:152px; top:1032px; width:230px; height:20px;" data-field="功能标题1" data-type="text">豆浆粉成本</div>
+    <div class="slot feature-card-text clamp2" style="left:152px; top:1064px; width:230px; height:40px;" data-field="功能说明1" data-type="richtext">25kg大袋→1:8兑水→16杯，单杯仅¥0.15</div>
+
+    <div class="card" style="left:424px; top:1005px; width:296px; height:118px;"></div>
+    <div class="slot feature-card-title" style="left:448px; top:1032px; width:230px; height:20px;" data-field="功能标题2" data-type="text">包装成本</div>
+    <div class="slot feature-card-text clamp2" style="left:448px; top:1064px; width:230px; height:40px;" data-field="功能说明2" data-type="richtext">杯子+封口+吸管，大批量采购单杯¥0.20</div>
+
+    <div class="card" style="left:720px; top:1005px; width:296px; height:118px;"></div>
+    <div class="slot feature-card-title" style="left:744px; top:1032px; width:230px; height:20px;" data-field="功能标题3" data-type="text">分摊成本</div>
+    <div class="slot feature-card-text clamp2" style="left:744px; top:1064px; width:230px; height:40px;" data-field="功能说明3" data-type="richtext">房租人工按营收占比20%分摊，单杯¥0.67</div>
+
+    <div class="card" style="left:1016px; top:1005px; width:296px; height:118px;"></div>
+    <div class="slot feature-card-title" style="left:1040px; top:1032px; width:230px; height:20px;" data-field="功能标题4" data-type="text">利润空间</div>
+    <div class="slot feature-card-text clamp2" style="left:1040px; top:1064px; width:230px; height:40px;" data-field="功能说明4" data-type="richtext">售价¥2.00，总成本¥1.10，每杯净利¥0.90</div>
+
+    <!-- Product overview：左文案右截图 -->
+    <div class="section-bg" style="top:1123px; height:565px;"></div>
+    <h2 class="slot title h2 clamp2" style="left:160px; top:1305px; width:455px; height:90px;" data-field="标题3" data-type="text">各产品毛利率对比</h2>
+    <p class="slot body clamp4" style="left:160px; top:1418px; width:455px; height:100px;" data-field="段落二" data-type="richtext">豆浆（冲泡）75-85% > 油条 60-70% > 包子 50-60%。豆浆反而比包子油条赚得多——省人工、不占灶台、冲泡即卖。</p>
+    <a class="button button-primary" style="left:160px; top:1545px; width:110px;" href="" data-field="链接8_URL" data-type="link">查看对比详情</a>
+    <!-- 余额概览截图 480×320 -->
+    <img class="img-placeholder" style="left:750px; top:1235px; width:470px; height:335px;" src="https://images.unsplash.com/photo-1551218808-94e220e084d2?w=600&q=80" alt="美食摆盘" data-field="图片2_URL" data-type="image">
+
+    <!-- Testimonials：标题 + 四宫格固定评价卡 -->
+    <div class="section-bg" style="top:1688px; height:980px;"></div>
+    <h2 class="slot title h2" style="left:0; top:1765px; width:1440px; height:52px; text-align:center;" data-field="标题4" data-type="text">为什么不降回 1 元</h2>
+    <p class="slot small clamp2" style="left:460px; top:1828px; width:520px; height:44px; text-align:center;" data-field="段落三" data-type="richtext">消费者默认2元是正常价，所有店默契定价，没有人先降价。豆浆是附属品，价格弹性极低。</p>
+    <div class="pill" style="left:605px; top:1902px; width:230px;" data-field="评分文案" data-type="text">四个经济学原因</div>
+
+    <div class="card" style="left:128px; top:2010px; width:592px; height:320px;"></div>
+    <div class="slot quote-title" style="left:160px; top:2070px; width:260px; height:32px;" data-field="客户名称1" data-type="text">锚定效应</div>
+    <p class="slot quote-text clamp5" style="left:160px; top:2130px; width:500px; height:112px;" data-field="客户评价1" data-type="richtext">消费者默认 2 元是「正常价」，没人质疑，也没人比较。价格一旦锚定，消费者就不再思考它是否合理。</p>
+    <p class="slot tiny clamp2" style="left:160px; top:2268px; width:220px; height:34px;" data-field="客户身份1" data-type="text">行为经济学经典理论</p>
+
+    <div class="card" style="left:720px; top:2010px; width:592px; height:320px;"></div>
+    <div class="slot quote-title" style="left:752px; top:2070px; width:260px; height:32px;" data-field="客户名称2" data-type="text">无竞争压力</div>
+    <p class="slot quote-text clamp5" style="left:752px; top:2130px; width:500px; height:112px;" data-field="客户评价2" data-type="richtext">同一条街所有店都卖 2 元——默契定价，没有人先降价。谁先降谁先死，因为利润率本来就不高。</p>
+    <p class="slot tiny clamp2" style="left:752px; top:2268px; width:220px; height:34px;" data-field="客户身份2" data-type="text">寡头默契定价</p>
+
+    <div class="card" style="left:128px; top:2330px; width:592px; height:320px;"></div>
+    <div class="slot quote-title" style="left:160px; top:2390px; width:260px; height:32px;" data-field="客户名称3" data-type="text">豆浆不是决策品</div>
+    <p class="slot quote-text clamp5" style="left:160px; top:2450px; width:500px; height:112px;" data-field="客户评价3" data-type="richtext">没人因为豆浆贵 5 毛换一家店。它是附属品，价格弹性极低。消费者选早餐店看的是包子好不好吃，不是豆浆便不便宜。</p>
+    <p class="slot tiny clamp2" style="left:160px; top:2588px; width:220px; height:34px;" data-field="客户身份3" data-type="text">附属品定价理论</p>
+
+    <div class="card" style="left:720px; top:2330px; width:592px; height:320px;"></div>
+    <div class="slot quote-title" style="left:752px; top:2390px; width:260px; height:32px;" data-field="客户名称4" data-type="text">退路进店推高成本</div>
+    <p class="slot quote-text clamp5" style="left:752px; top:2450px; width:500px; height:112px;" data-field="客户评价4" data-type="richtext">路边摊被政策赶进店面，房租涨了，所有东西顺便涨了价。豆浆从5毛涨到2元，消费者也跟着接受了。</p>
+    <p class="slot tiny clamp2" style="left:752px; top:2588px; width:220px; height:34px;" data-field="客户身份4" data-type="text">政策性成本转嫁</p>
+
+    <!-- Speed / dashboard showcase -->
+    <div class="section-bg" style="top:2668px; height:1030px;"></div>
+    <h2 class="slot title h2 clamp2" style="left:160px; top:2835px; width:520px; height:92px;" data-field="标题5" data-type="text">一杯豆浆的经济学启示</h2>
+    <p class="slot body clamp4" style="left:805px; top:2838px; width:420px; height:96px;" data-field="段落四" data-type="richtext">日常定价背后是信息不对称、锚定效应、默契合谋、价格弹性等经济力量在起作用。下次买豆浆时可以停下来想一想。</p>
+    <!-- 大型产品全景截图 960×540 -->
+    <img class="img-placeholder" style="left:190px; top:3035px; width:1060px; height:490px;" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80" alt="财务数据分析" data-field="图片3_URL" data-type="image">
+
+    <div class="card" style="left:128px; top:3525px; width:296px; height:138px;"></div>
+    <div class="slot feature-card-title" style="left:152px; top:3560px; width:230px; height:22px;" data-field="卖点标题1" data-type="text">信息不对称</div>
+    <p class="slot feature-card-text clamp3" style="left:152px; top:3595px; width:230px; height:58px;" data-field="卖点说明1" data-type="richtext">消费者不知道豆浆粉批发价，也没兴趣知道。商家利用这层信息差定价。</p>
+    <div class="card" style="left:424px; top:3525px; width:296px; height:138px;"></div>
+    <div class="slot feature-card-title" style="left:448px; top:3560px; width:230px; height:22px;" data-field="卖点标题2" data-type="text">价格锚定</div>
+    <p class="slot feature-card-text clamp3" style="left:448px; top:3595px; width:230px; height:58px;" data-field="卖点说明2" data-type="richtext">2元一旦成为市场价，新开张的店不会定1元——定了反而被怀疑质量有问题。</p>
+    <div class="card" style="left:720px; top:3525px; width:296px; height:138px;"></div>
+    <div class="slot feature-card-title" style="left:744px; top:3560px; width:230px; height:22px;" data-field="卖点标题3" data-type="text">低价格弹性</div>
+    <p class="slot feature-card-text clamp3" style="left:744px; top:3595px; width:230px; height:58px;" data-field="卖点说明3" data-type="richtext">附属品需求刚性，涨到2.5元也没人因为豆浆换店。</p>
+    <div class="card" style="left:1016px; top:3525px; width:296px; height:138px;"></div>
+    <div class="slot feature-card-title" style="left:1040px; top:3560px; width:230px; height:22px;" data-field="卖点标题4" data-type="text">默契定价</div>
+    <p class="slot feature-card-text clamp3" style="left:1040px; top:3595px; width:230px; height:58px;" data-field="卖点说明4" data-type="richtext">整条街的价格默契不是开会商量出来的，是「谁降价谁先死」逼出来的。</p>
+
+    <!-- Global reach map -->
+    <div class="section-bg" style="top:3698px; height:850px;"></div>
+    <h2 class="slot title h2" style="left:160px; top:3865px; width:520px; height:52px;" data-field="标题6" data-type="text">延伸思考</h2>
+    <p class="slot body clamp3" style="left:160px; top:3945px; width:760px; height:78px;" data-field="段落五" data-type="richtext">除了豆浆，生活中还有很多「凭什么卖这个价」的东西——瓶装水、电影爆米花、机场快餐。它们背后都有类似的经济学逻辑。</p>
+    <!-- 全球网络地图 1080×360 -->
+    <img class="img-placeholder" style="left:160px; top:4105px; width:1120px; height:320px;" src="https://images.unsplash.com/photo-1535320903710-d993d3d77d29?w=1200&q=80" alt="超市购物场景" data-field="图片4_URL" data-type="image">
+    <h2 class="slot title h2" style="left:430px; top:4308px; width:580px; height:52px; text-align:center;" data-field="标题7" data-type="text">想知道更多日常定价的秘密？</h2>
+    <a class="button button-primary" style="left:630px; top:4384px; width:180px;" href="https://book.douban.com/subject/30248320/" data-field="链接9_URL" data-type="link">阅读《牛奶可乐经济学》</a>
+
+    <!-- FAQ -->
+    <div class="section-bg" style="top:4548px; height:820px;"></div>
+    <h2 class="slot title h2" style="left:160px; top:4700px; width:520px; height:52px;" data-field="标题8" data-type="text">常见疑问</h2>
+    <p class="slot body clamp3" style="left:160px; top:4768px; width:520px; height:78px;" data-field="段落六" data-type="richtext">关于早餐店定价，你可能还想知道这些。</p>
+    <a class="button button-primary" style="left:160px; top:4870px; width:110px;" href="" data-field="链接10_URL" data-type="link">更多问答</a>
+
+    <div class="card" style="left:128px; top:5010px; width:1184px; height:70px;"></div>
+    <div class="slot faq-q" style="left:160px; top:5034px; width:600px; height:22px;" data-field="问题1" data-type="text">为什么豆浆不卖1元？会亏本吗？</div>
+    <div class="card" style="left:128px; top:5080px; width:1184px; height:70px;"></div>
+    <div class="slot faq-q" style="left:160px; top:5104px; width:600px; height:22px;" data-field="问题2" data-type="text">不同城市的豆浆价格为什么差不多？</div>
+    <div class="card" style="left:128px; top:5150px; width:1184px; height:70px;"></div>
+    <div class="slot faq-q" style="left:160px; top:5174px; width:600px; height:22px;" data-field="问题3" data-type="text">超市的豆浆为什么比早餐店便宜？</div>
+    <div class="card" style="left:128px; top:5220px; width:1184px; height:70px;"></div>
+    <div class="slot faq-q" style="left:160px; top:5244px; width:600px; height:22px;" data-field="问题4" data-type="text">如果我自己做豆浆，成本多少？</div>
+    <div class="card" style="left:128px; top:5290px; width:1184px; height:70px;"></div>
+    <div class="slot faq-q" style="left:160px; top:5314px; width:600px; height:22px;" data-field="问题5" data-type="text">豆浆机普及后，早餐店的豆浆还能卖2元吗？</div>
+
+    <!-- Pricing -->
+    <div class="section-bg" style="top:5368px; height:830px;"></div>
+    <h2 class="slot title h2" style="left:0; top:5510px; width:1440px; height:52px; text-align:center;" data-field="标题9" data-type="text">推荐阅读</h2>
+    <p class="slot small" style="left:0; top:5570px; width:1440px; height:22px; text-align:center;" data-field="段落七" data-type="text">了解更多日常经济学</p>
+
+    <div class="card" style="left:128px; top:5660px; width:378px; height:390px;"></div>
+    <div class="slot price-title" style="left:160px; top:5702px; width:280px; height:28px;" data-field="套餐名称1" data-type="text">入门推荐</div>
+    <div class="slot price-num" style="left:160px; top:5748px; width:280px; height:24px;" data-field="套餐价格1" data-type="number">《牛奶可乐经济学》</div>
+    <a class="button button-dark" style="left:160px; top:5795px; width:314px;" href="https://book.douban.com/subject/30248320/" data-field="链接11_URL" data-type="link">去豆瓣查看</a>
+    <p class="slot small clamp5" style="left:160px; top:5860px; width:314px; height:120px;" data-field="套餐权益1" data-type="richtext">罗伯特·弗兰克著。用经济学解释日常生活中的定价、激励和奇怪现象。适合零基础读者。</p>
+
+    <div class="card" style="left:531px; top:5660px; width:378px; height:390px; border-color:rgba(141,124,255,.42);"></div>
+    <div class="slot price-title" style="left:563px; top:5702px; width:280px; height:28px;" data-field="套餐名称2" data-type="text">进阶阅读</div>
+    <div class="slot price-num" style="left:563px; top:5748px; width:280px; height:24px;" data-field="套餐价格2" data-type="number">《卧底经济学》</div>
+    <a class="button button-primary" style="left:563px; top:5795px; width:314px;" href="https://book.douban.com/subject/25803319/" data-field="链接12_URL" data-type="link">去豆瓣查看</a>
+    <p class="slot small clamp5" style="left:563px; top:5860px; width:314px; height:120px;" data-field="套餐权益2" data-type="richtext">蒂姆·哈福德著。揭开全球化、定价、稀缺性背后的经济学逻辑，比牛奶可乐更深入。</p>
+
+    <div class="card" style="left:934px; top:5660px; width:378px; height:390px;"></div>
+    <div class="slot price-title" style="left:966px; top:5702px; width:280px; height:28px;" data-field="套餐名称3" data-type="text">深入探索</div>
+    <div class="slot price-num" style="left:966px; top:5748px; width:280px; height:24px;" data-field="套餐价格3" data-type="number">《魔鬼经济学》</div>
+    <a class="button button-dark" style="left:966px; top:5795px; width:314px;" href="https://book.douban.com/subject/1056296/" data-field="链接13_URL" data-type="link">去豆瓣查看</a>
+    <p class="slot small clamp5" style="left:966px; top:5860px; width:314px; height:120px;" data-field="套餐权益3" data-type="richtext">史蒂芬·列维特著。用数据挖掘揭示隐藏的因果关系，颠覆你对因果的直觉。</p>
+
+    <!-- Footer -->
+    <div class="section-bg" style="top:6198px; height:602px;"></div>
+    <div class="slot title h2" style="left:800px; top:6425px; width:460px; height:70px; font-size:70px; line-height:1;" data-field="页脚品牌" data-type="text">日常经济学</div>
+    <div class="slot small" style="left:160px; top:6295px; width:170px; height:24px; color:#fff;" data-field="页脚栏目1" data-type="text">相关书籍</div>
+    <a class="slot tiny" style="left:160px; top:6340px; width:160px; height:20px;" href="https://book.douban.com/subject/30248320/" data-field="链接14_URL" data-type="link">牛奶可乐经济学</a>
+    <a class="slot tiny" style="left:160px; top:6370px; width:160px; height:20px;" href="https://book.douban.com/subject/25803319/" data-field="链接15_URL" data-type="link">卧底经济学</a>
+    <a class="slot tiny" style="left:160px; top:6400px; width:160px; height:20px;" href="https://book.douban.com/subject/1056296/" data-field="链接16_URL" data-type="link">魔鬼经济学</a>
+
+    <div class="slot small" style="left:410px; top:6295px; width:170px; height:24px; color:#fff;" data-field="页脚栏目2" data-type="text">更多卡片</div>
+    <a class="slot tiny" style="left:410px; top:6340px; width:160px; height:20px;" href="" data-field="链接17_URL" data-type="link">忙时效率高</a>
+    <a class="slot tiny" style="left:410px; top:6370px; width:160px; height:20px;" href="" data-field="链接18_URL" data-type="link">AI视频赚钱</a>
+    <a class="slot tiny" style="left:410px; top:6400px; width:160px; height:20px;" href="" data-field="链接19_URL" data-type="link">安慰剂按钮</a>
+
+    <p class="slot tiny clamp3" style="left:160px; top:6555px; width:520px; height:70px;" data-field="页脚说明" data-type="richtext">日常经济学知识卡片系列——每张卡片讲透一个「天天见到但没想过为什么」的知识点。</p>
+  </main>
+</body>
+</html>

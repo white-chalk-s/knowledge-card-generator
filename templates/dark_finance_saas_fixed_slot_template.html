@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dark Finance SaaS Fixed Slot Template</title>
+  <style>
+    :root {
+      --canvas-w: 1440px;
+      --canvas-h: 6800px;
+      --bg: #030304;
+      --bg-2: #07070a;
+      --card: #0c0c11;
+      --card-2: #111119;
+      --line: rgba(255,255,255,0.09);
+      --line-strong: rgba(255,255,255,0.16);
+      --title: #f6f7fb;
+      --text: #b7bac7;
+      --muted: #6f7383;
+      --accent: #8d7cff;
+      --accent-2: #c4b8ff;
+      --success: #4de39a;
+      --dark-text: #ffffff;
+      --font: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --shadow-glow: 0 0 80px rgba(126,103,255,.18), 0 24px 80px rgba(0,0,0,.55);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin:0; min-height:100%; background:#000; font-family:var(--font); }
+    body { overflow-x:auto; }
+
+    /* 固定画布：所有内容槽位都按 1440 × 6800 设计稿坐标锁死 */
+    .canvas {
+      position: relative;
+      width: var(--canvas-w);
+      height: var(--canvas-h);
+      margin: 0 auto;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 70% 7%, rgba(116,94,255,.18), transparent 420px),
+        radial-gradient(circle at 32% 41%, rgba(116,94,255,.10), transparent 360px),
+        linear-gradient(180deg, #030304 0%, #050507 46%, #030304 100%);
+      color: var(--text);
+    }
+
+    .slot, .section, .card, .img-placeholder, .line, .vline, .button, .pill {
+      position: absolute;
+      overflow: hidden;
+    }
+
+    .text { color: var(--text); }
+    .title { color: var(--title); font-weight: 560; letter-spacing: -0.055em; }
+    .h1 { font-size: 68px; line-height: 0.98; }
+    .h2 { font-size: 38px; line-height: 1.08; letter-spacing: -0.045em; }
+    .h3 { font-size: 22px; line-height: 1.16; letter-spacing: -0.035em; }
+    .body { font-size: 17px; line-height: 1.55; color: var(--text); }
+    .small { font-size: 13px; line-height: 1.5; color: var(--muted); }
+    .tiny { font-size: 11px; line-height: 1.45; color: var(--muted); }
+    .label { font-size: 12px; line-height: 1; color: var(--accent-2); letter-spacing: .12em; text-transform: uppercase; font-weight: 700; }
+    .number { color: var(--title); font-weight: 600; letter-spacing: -0.045em; }
+
+    .clamp2, .clamp3, .clamp4, .clamp5 {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      text-overflow: ellipsis;
+    }
+    .clamp2 { -webkit-line-clamp: 2; }
+    .clamp3 { -webkit-line-clamp: 3; }
+    .clamp4 { -webkit-line-clamp: 4; }
+    .clamp5 { -webkit-line-clamp: 5; }
+
+    .section { left: 128px; width: 1184px; }
+    .section-bg { position:absolute; left:128px; width:1184px; border-top:1px solid var(--line); }
+    .card { background: rgba(11,11,16,.86); border: 1px solid var(--line); border-radius: var(--radius-md); }
+    .card-dark { background: rgba(8,8,12,.92); }
+    .line { height: 1px; background: var(--line); }
+    .vline { width: 1px; background: var(--line); }
+
+    .img-placeholder {
+      object-fit: cover;
+      border-radius: var(--radius-md);
+      background:
+        linear-gradient(135deg, rgba(141,124,255,.12), rgba(255,255,255,.025)),
+        rgba(8,8,13,.9);
+      box-shadow: inset 0 0 40px rgba(141,124,255,.08);
+    }
+    .img-placeholder[src=""],
+    .img-placeholder:not([src]) {
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: rgba(210,212,232,.48);
+      font-size: 13px;
+      line-height: 1.55;
+      border: 1px dashed rgba(196,184,255,.32);
+      object-fit: none;
+    }
+
+    .button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 42px;
+      padding: 0 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .button-primary { background: #f6f7fb; color: #07070a; }
+    .button-secondary { background: transparent; color: #f6f7fb; border: 1px solid rgba(255,255,255,.18); }
+    .button-dark { background: #0f0f15; color: #f6f7fb; border: 1px solid rgba(255,255,255,.13); }
+    .pill { border: 1px solid var(--line); border-radius: 999px; height: 30px; display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--text); }
+
+    .logo-word { color: var(--title); font-size: 20px; font-weight: 540; letter-spacing: -0.025em; }
+    .nav-link { color: var(--text); font-size: 13px; text-decoration:none; white-space:nowrap; }
+    .partner { color: #d8d9e4; font-size: 15px; font-weight: 560; text-align:center; }
+
+    .feature-card-title { color: var(--title); font-size: 15px; font-weight: 560; }
+    .feature-card-text { color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .quote-title { color: var(--title); font-size: 18px; font-weight: 540; letter-spacing: -0.03em; }
+    .quote-text { color: #a9acb9; font-size: 14px; line-height: 1.55; }
+    .price-title { color: var(--title); font-size: 20px; font-weight: 540; letter-spacing: -0.035em; }
+    .price-num { color: var(--title); font-size: 15px; font-weight: 540; }
+    .faq-q { color: var(--title); font-size: 15px; font-weight: 540; }
+    .faq-a { color: var(--muted); font-size: 12px; line-height: 1.5; }
+
+    @media (max-width: 768px) {
+      .canvas { transform: scale(.52); transform-origin: top left; margin: 0; }
+      body { width: calc(var(--canvas-w) * .52); height: calc(var(--canvas-h) * .52); overflow-x: hidden; }
+    }
+  </style>
+</head>
+<body>
+  <main class="canvas">
+    <!-- Header：固定导航 1440×80 -->
+    <div class="slot logo-word" style="left:128px; top:28px; width:180px; height:28px;" data-field="品牌名称" data-type="text">{{品牌名称}}</div>
+    <a class="slot nav-link" style="left:760px; top:31px; width:74px; height:20px;" href="{{链接1_URL}}" data-field="链接1_URL" data-type="link">{{链接1_文字}}</a>
+    <a class="slot nav-link" style="left:852px; top:31px; width:70px; height:20px;" href="{{链接2_URL}}" data-field="链接2_URL" data-type="link">{{链接2_文字}}</a>
+    <a class="slot nav-link" style="left:940px; top:31px; width:56px; height:20px;" href="{{链接3_URL}}" data-field="链接3_URL" data-type="link">{{链接3_文字}}</a>
+    <a class="slot nav-link" style="left:1012px; top:31px; width:62px; height:20px;" href="{{链接4_URL}}" data-field="链接4_URL" data-type="link">{{链接4_文字}}</a>
+    <a class="button button-dark" style="left:1190px; top:20px; width:84px;" href="{{链接5_URL}}" data-field="链接5_URL" data-type="link">{{链接5_文字}}</a>
+
+    <!-- Hero：左文案 + 右产品截图，区域固定 -->
+    <div class="section-bg" style="top:80px; height:660px;"></div>
+    <h1 class="slot title h1 clamp3" style="left:170px; top:192px; width:560px; height:215px;" data-field="标题" data-type="text">{{标题}}</h1>
+    <p class="slot body clamp4" style="left:170px; top:430px; width:520px; height:110px;" data-field="段落一" data-type="richtext">{{段落一}}</p>
+    <a class="button button-primary" style="left:170px; top:580px; width:116px;" href="{{链接6_URL}}" data-field="链接6_URL" data-type="link">{{链接6_文字}}</a>
+    <a class="button button-secondary" style="left:302px; top:580px; width:126px;" href="{{链接7_URL}}" data-field="链接7_URL" data-type="link">{{链接7_文字}}</a>
+    <!-- 主视觉产品截图 520×390：放仪表盘首屏图，只替换图片，不改变位置 -->
+    <img class="img-placeholder" style="left:770px; top:140px; width:500px; height:430px;" src="{{图片1_URL}}" alt="{{图片1_描述}}" data-field="图片1_URL" data-type="image">
+
+    <!-- Partner strip：固定品牌墙 -->
+    <div class="section-bg" style="top:740px; height:265px;"></div>
+    <div class="slot title h3" style="left:0; top:824px; width:1440px; height:32px; text-align:center;" data-field="标题2" data-type="text">{{标题2}}</div>
+    <div class="slot partner" style="left:128px; top:908px; width:120px; height:26px;" data-field="合作品牌1" data-type="text">{{合作品牌1}}</div>
+    <div class="slot partner" style="left:274px; top:908px; width:120px; height:26px;" data-field="合作品牌2" data-type="text">{{合作品牌2}}</div>
+    <div class="slot partner" style="left:420px; top:908px; width:120px; height:26px;" data-field="合作品牌3" data-type="text">{{合作品牌3}}</div>
+    <div class="slot partner" style="left:566px; top:908px; width:120px; height:26px;" data-field="合作品牌4" data-type="text">{{合作品牌4}}</div>
+    <div class="slot partner" style="left:712px; top:908px; width:120px; height:26px;" data-field="合作品牌5" data-type="text">{{合作品牌5}}</div>
+    <div class="slot partner" style="left:858px; top:908px; width:120px; height:26px;" data-field="合作品牌6" data-type="text">{{合作品牌6}}</div>
+    <div class="slot partner" style="left:1004px; top:908px; width:120px; height:26px;" data-field="合作品牌7" data-type="text">{{合作品牌7}}</div>
+    <div class="slot partner" style="left:1150px; top:908px; width:120px; height:26px;" data-field="合作品牌8" data-type="text">{{合作品牌8}}</div>
+
+    <!-- Feature tabs：四个功能入口卡片，位置固定 -->
+    <div class="card" style="left:128px; top:1005px; width:296px; height:118px;"></div>
+    <div class="slot feature-card-title clamp1" style="left:152px; top:1032px; width:230px; height:20px;" data-field="功能标题1" data-type="text">{{功能标题1}}</div>
+    <div class="slot feature-card-text clamp2" style="left:152px; top:1064px; width:230px; height:40px;" data-field="功能说明1" data-type="richtext">{{功能说明1}}</div>
+
+    <div class="card" style="left:424px; top:1005px; width:296px; height:118px;"></div>
+    <div class="slot feature-card-title" style="left:448px; top:1032px; width:230px; height:20px;" data-field="功能标题2" data-type="text">{{功能标题2}}</div>
+    <div class="slot feature-card-text clamp2" style="left:448px; top:1064px; width:230px; height:40px;" data-field="功能说明2" data-type="richtext">{{功能说明2}}</div>
+
+    <div class="card" style="left:720px; top:1005px; width:296px; height:118px;"></div>
+    <div class="slot feature-card-title" style="left:744px; top:1032px; width:230px; height:20px;" data-field="功能标题3" data-type="text">{{功能标题3}}</div>
+    <div class="slot feature-card-text clamp2" style="left:744px; top:1064px; width:230px; height:40px;" data-field="功能说明3" data-type="richtext">{{功能说明3}}</div>
+
+    <div class="card" style="left:1016px; top:1005px; width:296px; height:118px;"></div>
+    <div class="slot feature-card-title" style="left:1040px; top:1032px; width:230px; height:20px;" data-field="功能标题4" data-type="text">{{功能标题4}}</div>
+    <div class="slot feature-card-text clamp2" style="left:1040px; top:1064px; width:230px; height:40px;" data-field="功能说明4" data-type="richtext">{{功能说明4}}</div>
+
+    <!-- Product overview：左文案右截图 -->
+    <div class="section-bg" style="top:1123px; height:565px;"></div>
+    <h2 class="slot title h2 clamp2" style="left:160px; top:1305px; width:455px; height:90px;" data-field="标题3" data-type="text">{{标题3}}</h2>
+    <p class="slot body clamp4" style="left:160px; top:1418px; width:455px; height:100px;" data-field="段落二" data-type="richtext">{{段落二}}</p>
+    <a class="button button-primary" style="left:160px; top:1545px; width:110px;" href="{{链接8_URL}}" data-field="链接8_URL" data-type="link">{{链接8_文字}}</a>
+    <!-- 余额概览截图 480×320 -->
+    <img class="img-placeholder" style="left:750px; top:1235px; width:470px; height:335px;" src="{{图片2_URL}}" alt="{{图片2_描述}}" data-field="图片2_URL" data-type="image">
+
+    <!-- Testimonials：标题 + 四宫格固定评价卡 -->
+    <div class="section-bg" style="top:1688px; height:980px;"></div>
+    <h2 class="slot title h2" style="left:0; top:1765px; width:1440px; height:52px; text-align:center;" data-field="标题4" data-type="text">{{标题4}}</h2>
+    <p class="slot small clamp2" style="left:460px; top:1828px; width:520px; height:44px; text-align:center;" data-field="段落三" data-type="richtext">{{段落三}}</p>
+    <div class="pill" style="left:605px; top:1902px; width:230px;" data-field="评分文案" data-type="text">{{评分文案}}</div>
+
+    <div class="card" style="left:128px; top:2010px; width:592px; height:320px;"></div>
+    <div class="slot quote-title" style="left:160px; top:2070px; width:260px; height:32px;" data-field="客户名称1" data-type="text">{{客户名称1}}</div>
+    <p class="slot quote-text clamp5" style="left:160px; top:2130px; width:500px; height:112px;" data-field="客户评价1" data-type="richtext">{{客户评价1}}</p>
+    <p class="slot tiny clamp2" style="left:160px; top:2268px; width:220px; height:34px;" data-field="客户身份1" data-type="text">{{客户身份1}}</p>
+
+    <div class="card" style="left:720px; top:2010px; width:592px; height:320px;"></div>
+    <div class="slot quote-title" style="left:752px; top:2070px; width:260px; height:32px;" data-field="客户名称2" data-type="text">{{客户名称2}}</div>
+    <p class="slot quote-text clamp5" style="left:752px; top:2130px; width:500px; height:112px;" data-field="客户评价2" data-type="richtext">{{客户评价2}}</p>
+    <p class="slot tiny clamp2" style="left:752px; top:2268px; width:220px; height:34px;" data-field="客户身份2" data-type="text">{{客户身份2}}</p>
+
+    <div class="card" style="left:128px; top:2330px; width:592px; height:320px;"></div>
+    <div class="slot quote-title" style="left:160px; top:2390px; width:260px; height:32px;" data-field="客户名称3" data-type="text">{{客户名称3}}</div>
+    <p class="slot quote-text clamp5" style="left:160px; top:2450px; width:500px; height:112px;" data-field="客户评价3" data-type="richtext">{{客户评价3}}</p>
+    <p class="slot tiny clamp2" style="left:160px; top:2588px; width:220px; height:34px;" data-field="客户身份3" data-type="text">{{客户身份3}}</p>
+
+    <div class="card" style="left:720px; top:2330px; width:592px; height:320px;"></div>
+    <div class="slot quote-title" style="left:752px; top:2390px; width:260px; height:32px;" data-field="客户名称4" data-type="text">{{客户名称4}}</div>
+    <p class="slot quote-text clamp5" style="left:752px; top:2450px; width:500px; height:112px;" data-field="客户评价4" data-type="richtext">{{客户评价4}}</p>
+    <p class="slot tiny clamp2" style="left:752px; top:2588px; width:220px; height:34px;" data-field="客户身份4" data-type="text">{{客户身份4}}</p>
+
+    <!-- Speed / dashboard showcase -->
+    <div class="section-bg" style="top:2668px; height:1030px;"></div>
+    <h2 class="slot title h2 clamp2" style="left:160px; top:2835px; width:520px; height:92px;" data-field="标题5" data-type="text">{{标题5}}</h2>
+    <p class="slot body clamp4" style="left:805px; top:2838px; width:420px; height:96px;" data-field="段落四" data-type="richtext">{{段落四}}</p>
+    <!-- 大型产品全景截图 960×540 -->
+    <img class="img-placeholder" style="left:190px; top:3035px; width:1060px; height:490px;" src="{{图片3_URL}}" alt="{{图片3_描述}}" data-field="图片3_URL" data-type="image">
+
+    <div class="card" style="left:128px; top:3525px; width:296px; height:138px;"></div>
+    <div class="slot feature-card-title" style="left:152px; top:3560px; width:230px; height:22px;" data-field="卖点标题1" data-type="text">{{卖点标题1}}</div>
+    <p class="slot feature-card-text clamp3" style="left:152px; top:3595px; width:230px; height:58px;" data-field="卖点说明1" data-type="richtext">{{卖点说明1}}</p>
+    <div class="card" style="left:424px; top:3525px; width:296px; height:138px;"></div>
+    <div class="slot feature-card-title" style="left:448px; top:3560px; width:230px; height:22px;" data-field="卖点标题2" data-type="text">{{卖点标题2}}</div>
+    <p class="slot feature-card-text clamp3" style="left:448px; top:3595px; width:230px; height:58px;" data-field="卖点说明2" data-type="richtext">{{卖点说明2}}</p>
+    <div class="card" style="left:720px; top:3525px; width:296px; height:138px;"></div>
+    <div class="slot feature-card-title" style="left:744px; top:3560px; width:230px; height:22px;" data-field="卖点标题3" data-type="text">{{卖点标题3}}</div>
+    <p class="slot feature-card-text clamp3" style="left:744px; top:3595px; width:230px; height:58px;" data-field="卖点说明3" data-type="richtext">{{卖点说明3}}</p>
+    <div class="card" style="left:1016px; top:3525px; width:296px; height:138px;"></div>
+    <div class="slot feature-card-title" style="left:1040px; top:3560px; width:230px; height:22px;" data-field="卖点标题4" data-type="text">{{卖点标题4}}</div>
+    <p class="slot feature-card-text clamp3" style="left:1040px; top:3595px; width:230px; height:58px;" data-field="卖点说明4" data-type="richtext">{{卖点说明4}}</p>
+
+    <!-- Global reach map -->
+    <div class="section-bg" style="top:3698px; height:850px;"></div>
+    <h2 class="slot title h2" style="left:160px; top:3865px; width:520px; height:52px;" data-field="标题6" data-type="text">{{标题6}}</h2>
+    <p class="slot body clamp3" style="left:160px; top:3945px; width:760px; height:78px;" data-field="段落五" data-type="richtext">{{段落五}}</p>
+    <!-- 全球网络地图 1080×360 -->
+    <img class="img-placeholder" style="left:160px; top:4105px; width:1120px; height:320px;" src="{{图片4_URL}}" alt="{{图片4_描述}}" data-field="图片4_URL" data-type="image">
+    <h2 class="slot title h2" style="left:430px; top:4308px; width:580px; height:52px; text-align:center;" data-field="标题7" data-type="text">{{标题7}}</h2>
+    <a class="button button-primary" style="left:630px; top:4384px; width:180px;" href="{{链接9_URL}}" data-field="链接9_URL" data-type="link">{{链接9_文字}}</a>
+
+    <!-- FAQ -->
+    <div class="section-bg" style="top:4548px; height:820px;"></div>
+    <h2 class="slot title h2" style="left:160px; top:4700px; width:520px; height:52px;" data-field="标题8" data-type="text">{{标题8}}</h2>
+    <p class="slot body clamp3" style="left:160px; top:4768px; width:520px; height:78px;" data-field="段落六" data-type="richtext">{{段落六}}</p>
+    <a class="button button-primary" style="left:160px; top:4870px; width:110px;" href="{{链接10_URL}}" data-field="链接10_URL" data-type="link">{{链接10_文字}}</a>
+
+    <div class="card" style="left:128px; top:5010px; width:1184px; height:70px;"></div>
+    <div class="slot faq-q" style="left:160px; top:5034px; width:600px; height:22px;" data-field="问题1" data-type="text">{{问题1}}</div>
+    <div class="card" style="left:128px; top:5080px; width:1184px; height:70px;"></div>
+    <div class="slot faq-q" style="left:160px; top:5104px; width:600px; height:22px;" data-field="问题2" data-type="text">{{问题2}}</div>
+    <div class="card" style="left:128px; top:5150px; width:1184px; height:70px;"></div>
+    <div class="slot faq-q" style="left:160px; top:5174px; width:600px; height:22px;" data-field="问题3" data-type="text">{{问题3}}</div>
+    <div class="card" style="left:128px; top:5220px; width:1184px; height:70px;"></div>
+    <div class="slot faq-q" style="left:160px; top:5244px; width:600px; height:22px;" data-field="问题4" data-type="text">{{问题4}}</div>
+    <div class="card" style="left:128px; top:5290px; width:1184px; height:70px;"></div>
+    <div class="slot faq-q" style="left:160px; top:5314px; width:600px; height:22px;" data-field="问题5" data-type="text">{{问题5}}</div>
+
+    <!-- Pricing -->
+    <div class="section-bg" style="top:5368px; height:830px;"></div>
+    <h2 class="slot title h2" style="left:0; top:5510px; width:1440px; height:52px; text-align:center;" data-field="标题9" data-type="text">{{标题9}}</h2>
+    <p class="slot small" style="left:0; top:5570px; width:1440px; height:22px; text-align:center;" data-field="段落七" data-type="text">{{段落七}}</p>
+
+    <div class="card" style="left:128px; top:5660px; width:378px; height:390px;"></div>
+    <div class="slot price-title" style="left:160px; top:5702px; width:280px; height:28px;" data-field="套餐名称1" data-type="text">{{套餐名称1}}</div>
+    <div class="slot price-num" style="left:160px; top:5748px; width:280px; height:24px;" data-field="套餐价格1" data-type="number">{{套餐价格1}}</div>
+    <a class="button button-dark" style="left:160px; top:5795px; width:314px;" href="{{链接11_URL}}" data-field="链接11_URL" data-type="link">{{链接11_文字}}</a>
+    <p class="slot small clamp5" style="left:160px; top:5860px; width:314px; height:120px;" data-field="套餐权益1" data-type="richtext">{{套餐权益1}}</p>
+
+    <div class="card" style="left:531px; top:5660px; width:378px; height:390px; border-color:rgba(141,124,255,.42);"></div>
+    <div class="slot price-title" style="left:563px; top:5702px; width:280px; height:28px;" data-field="套餐名称2" data-type="text">{{套餐名称2}}</div>
+    <div class="slot price-num" style="left:563px; top:5748px; width:280px; height:24px;" data-field="套餐价格2" data-type="number">{{套餐价格2}}</div>
+    <a class="button button-primary" style="left:563px; top:5795px; width:314px;" href="{{链接12_URL}}" data-field="链接12_URL" data-type="link">{{链接12_文字}}</a>
+    <p class="slot small clamp5" style="left:563px; top:5860px; width:314px; height:120px;" data-field="套餐权益2" data-type="richtext">{{套餐权益2}}</p>
+
+    <div class="card" style="left:934px; top:5660px; width:378px; height:390px;"></div>
+    <div class="slot price-title" style="left:966px; top:5702px; width:280px; height:28px;" data-field="套餐名称3" data-type="text">{{套餐名称3}}</div>
+    <div class="slot price-num" style="left:966px; top:5748px; width:280px; height:24px;" data-field="套餐价格3" data-type="number">{{套餐价格3}}</div>
+    <a class="button button-dark" style="left:966px; top:5795px; width:314px;" href="{{链接13_URL}}" data-field="链接13_URL" data-type="link">{{链接13_文字}}</a>
+    <p class="slot small clamp5" style="left:966px; top:5860px; width:314px; height:120px;" data-field="套餐权益3" data-type="richtext">{{套餐权益3}}</p>
+
+    <!-- Footer -->
+    <div class="section-bg" style="top:6198px; height:602px;"></div>
+    <div class="slot title h2" style="left:800px; top:6425px; width:460px; height:70px; font-size:70px; line-height:1;" data-field="页脚品牌" data-type="text">{{页脚品牌}}</div>
+    <div class="slot small" style="left:160px; top:6295px; width:170px; height:24px; color:#fff;" data-field="页脚栏目1" data-type="text">{{页脚栏目1}}</div>
+    <a class="slot tiny" style="left:160px; top:6340px; width:160px; height:20px;" href="{{链接14_URL}}" data-field="链接14_URL" data-type="link">{{链接14_文字}}</a>
+    <a class="slot tiny" style="left:160px; top:6370px; width:160px; height:20px;" href="{{链接15_URL}}" data-field="链接15_URL" data-type="link">{{链接15_文字}}</a>
+    <a class="slot tiny" style="left:160px; top:6400px; width:160px; height:20px;" href="{{链接16_URL}}" data-field="链接16_URL" data-type="link">{{链接16_文字}}</a>
+
+    <div class="slot small" style="left:410px; top:6295px; width:170px; height:24px; color:#fff;" data-field="页脚栏目2" data-type="text">{{页脚栏目2}}</div>
+    <a class="slot tiny" style="left:410px; top:6340px; width:160px; height:20px;" href="{{链接17_URL}}" data-field="链接17_URL" data-type="link">{{链接17_文字}}</a>
+    <a class="slot tiny" style="left:410px; top:6370px; width:160px; height:20px;" href="{{链接18_URL}}" data-field="链接18_URL" data-type="link">{{链接18_文字}}</a>
+    <a class="slot tiny" style="left:410px; top:6400px; width:160px; height:20px;" href="{{链接19_URL}}" data-field="链接19_URL" data-type="link">{{链接19_文字}}</a>
+
+    <p class="slot tiny clamp3" style="left:160px; top:6555px; width:520px; height:70px;" data-field="页脚说明" data-type="richtext">{{页脚说明}}</p>
+  </main>
+</body>
+</html>

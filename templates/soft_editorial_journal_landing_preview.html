@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soft Editorial Journal Landing Preview</title>
+  <style>
+    :root {
+      --bg:#f6f2eb; --surface:#fffdf9; --surface-2:#f3eadc; --title:#231e19; --text:#5b544d; --muted:#8b8278; --accent:#c4934e; --border:#e5dac7; --dark:#1d1916; --light:#f9f5ef;
+      --shadow:0 16px 40px rgba(50,38,22,.08); --radius:22px;
+    }
+    *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--text)}
+    .canvas{width:800px;height:600px;overflow:hidden;margin:0 auto;background:linear-gradient(180deg,#f8f4ee,#f4efe7);padding:20px 24px 18px}
+    .nav{height:42px;background:rgba(255,253,249,.9);border:1px solid var(--border);border-radius:999px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;box-shadow:0 10px 24px rgba(50,38,22,.06);margin-bottom:20px}
+    .brand{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--title)}
+    .nav-links{display:flex;gap:14px;font-size:11px;color:var(--muted)}
+    .cta{background:var(--dark);color:#fff;padding:7px 12px;border-radius:999px;font-size:11px;font-weight:600}
+    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:center;margin-bottom:22px}
+    .eyebrow{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:8px}
+    h1,h2,h3{margin:0;font-family:Georgia,"Times New Roman","Songti SC",serif;color:var(--title)}
+    h1{font-size:34px;line-height:1.02;letter-spacing:-.04em;margin-bottom:10px}
+    p{margin:0;color:var(--text);line-height:1.5}
+    .sub{font-size:12px;max-width:370px;margin-bottom:12px}
+    .action-row{display:flex;gap:10px;align-items:center;font-size:11px}
+    .btn-dark,.btn-light{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;height:30px;padding:0 12px;font-weight:700}
+    .btn-dark{background:var(--dark);color:#fff}.btn-light{border:1px solid var(--border);color:var(--title);background:transparent}
+    .meta{display:flex;gap:12px;font-size:10px;color:var(--muted);margin-top:10px;flex-wrap:wrap}
+    .hero-card{background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow);border-radius:24px;padding:14px}
+    .hero-card .mini-card{background:linear-gradient(180deg,#fff,#fbf8f2);border:1px solid var(--border);border-radius:16px;padding:12px;display:grid;gap:10px}
+    .quote{font-size:12px;color:var(--title);line-height:1.45}
+    .line{height:8px;border-radius:999px;background:#ece2d0}.line.small{width:58%}.line.mid{width:76%}.line.long{width:92%}
+
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+    .phone-card,.panel,.story-card,.faq-card,.price-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow)}
+    .phone-card{padding:12px;text-align:center}
+    .phone{height:120px;border-radius:20px;border:1px solid #d8ccb8;background:linear-gradient(180deg,#fcfaf6,#efe6d7);padding:10px;display:grid;gap:8px;align-content:start;margin-bottom:10px}
+    .screen-bar{height:7px;border-radius:999px;background:#dac6a4}.screen-card{height:18px;border-radius:8px;background:#fff;border:1px solid #e5dac7}.chart-row{display:flex;align-items:flex-end;gap:5px;height:38px}.bar{width:14px;background:#c4934e;border-radius:5px 5px 0 0}.bar.l1{height:16px}.bar.l2{height:24px}.bar.l3{height:32px}.bar.l4{height:20px}
+    .card-title{font-family:Georgia,"Times New Roman",serif;color:var(--title);font-size:18px;letter-spacing:-.02em;margin-bottom:4px}.tiny{font-size:10px;color:var(--muted)}
+
+    .section-title{display:flex;justify-content:space-between;align-items:end;margin-bottom:10px}
+    .section-title h2{font-size:24px;line-height:1.05}
+    .stats-layout{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin-bottom:20px}
+    .panel{padding:14px}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+    .stat{padding:12px;border:1px solid var(--border);border-radius:16px;background:#fdfaf5}.stat strong{display:block;font-family:Georgia,"Times New Roman",serif;font-size:24px;color:var(--title);line-height:1}
+    .big-chart{height:58px;display:flex;align-items:flex-end;gap:8px;margin-top:10px}.big-chart .col{flex:1;background:#c4934e;border-radius:6px 6px 0 0}.h1x{height:22px}.h2x{height:35px}.h3x{height:28px}.h4x{height:42px}.h5x{height:36px}.h6x{height:46px}
+    .topic-list{margin-top:10px;border-top:1px solid var(--border)} .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee4d5;font-size:12px}
+
+    .dashboard{padding:14px;margin-bottom:18px}
+    .desktop{height:116px;border:1px solid var(--border);background:linear-gradient(180deg,#fff,#faf5ee);border-radius:18px;padding:12px;display:grid;grid-template-columns:1.25fr .75fr;gap:12px}
+    .desk-main,.desk-side{display:grid;gap:8px}.box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:8px}.box.dark{background:#1f1a17;color:#fff;border-color:#1f1a17}
+    .mini-chart{display:flex;align-items:flex-end;gap:5px;height:36px}.mini-chart span{display:block;flex:1;background:#d9c3a0;border-radius:4px 4px 0 0}.mini-chart span:nth-child(1){height:12px}.mini-chart span:nth-child(2){height:22px}.mini-chart span:nth-child(3){height:16px}.mini-chart span:nth-child(4){height:28px}.mini-chart span:nth-child(5){height:20px}
+
+    .bottom{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .price-grid,.faq-grid{display:grid;gap:12px}
+    .price-card,.faq-card{padding:14px}
+    .price{font-family:Georgia,"Times New Roman",serif;font-size:28px;color:var(--title);line-height:1;margin:8px 0}
+    .bullets{margin:10px 0 0;padding-left:16px;font-size:11px;line-height:1.5;color:var(--text)}
+    .faq-card h3{font-size:16px;margin-bottom:6px}
+    .footer-cta{margin-top:14px;padding:14px 16px;background:linear-gradient(180deg,#fdfbf8,#efe3cf);border:1px solid var(--border);border-radius:24px;text-align:center}
+    .footer-cta h2{font-size:26px;margin-bottom:6px}
+    .footer-note{font-size:10px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="nav">
+      <div class="brand">North Journal</div>
+      <div class="nav-links"><span>About</span><span>Pricing</span><span>Features</span><span>Stories</span></div>
+      <div class="cta">Get Started</div>
+    </div>
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">mindful journaling</div>
+        <h1>A journal that grows with you</h1>
+        <p class="sub">Capture daily thoughts, trace emotional patterns, and turn private reflection into clear progress with a calm, editorial-style workspace.</p>
+        <div class="action-row"><div class="btn-dark">Start writing free</div><div class="btn-light">Watch demo</div></div>
+        <div class="meta"><span>14-day trial</span><span>No credit card</span><span>Private by design</span></div>
+      </div>
+      <div class="hero-card">
+        <div class="eyebrow">today's reflection</div>
+        <div class="mini-card">
+          <div class="quote">“There is a quiet joy in noticing how small moments begin to shape a bigger story.”</div>
+          <div class="line long"></div>
+          <div class="line mid"></div>
+          <div class="line small"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-title"><h2>See it in action</h2><span class="tiny">3 sample flows</span></div>
+    <section class="grid-3">
+      <article class="phone-card"><div class="phone"><div class="screen-bar" style="width:48%"></div><div class="screen-card"></div><div class="screen-card"></div><div class="screen-card"></div></div><div class="card-title">Write</div><div class="tiny">Daily prompts and calm capture</div></article>
+      <article class="phone-card"><div class="phone"><div class="screen-bar" style="width:56%"></div><div class="chart-row"><div class="bar l1"></div><div class="bar l3"></div><div class="bar l2"></div><div class="bar l4"></div></div><div class="screen-card"></div></div><div class="card-title">Reflect</div><div class="tiny">Insights from your entries</div></article>
+      <article class="phone-card"><div class="phone"><div class="screen-bar" style="width:44%"></div><div class="screen-card"></div><div class="chart-row"><div class="bar l2"></div><div class="bar l4"></div><div class="bar l3"></div><div class="bar l1"></div></div></div><div class="card-title">Track</div><div class="tiny">Mood, focus, and habits over time</div></article>
+    </section>
+
+    <div class="section-title"><h2>Your inner world, beautifully mapped</h2><span class="tiny">weekly overview</span></div>
+    <section class="stats-layout">
+      <article class="panel">
+        <p class="tiny">Weekly summary</p>
+        <div class="stats">
+          <div class="stat"><strong>142</strong><span class="tiny">entries</span></div>
+          <div class="stat"><strong>86</strong><span class="tiny">key ideas</span></div>
+          <div class="stat"><strong>7.2</strong><span class="tiny">avg mood</span></div>
+        </div>
+        <p class="tiny">Activity trend</p>
+        <div class="big-chart"><div class="col h1x"></div><div class="col h2x"></div><div class="col h3x"></div><div class="col h4x"></div><div class="col h5x"></div><div class="col h6x"></div></div>
+      </article>
+      <article class="panel">
+        <p class="tiny">Top themes</p>
+        <div class="topic-list">
+          <div class="row"><span>Presence</span><strong>28</strong></div>
+          <div class="row"><span>Morning</span><strong>21</strong></div>
+          <div class="row"><span>Curiosity</span><strong>19</strong></div>
+          <div class="row"><span>Gratitude</span><strong>17</strong></div>
+          <div class="row"><span>Quiet</span><strong>15</strong></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="dashboard panel">
+      <div class="section-title" style="margin-bottom:12px"><h2>Beautiful on every screen</h2><span class="tiny">desktop workspace</span></div>
+      <div class="desktop">
+        <div class="desk-main">
+          <div class="box"><div class="tiny" style="margin-bottom:6px">Today’s note</div><div class="line long"></div><div class="line mid" style="margin-top:8px"></div><div class="line small" style="margin-top:8px"></div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="box"><div class="tiny">Mood spread</div><div class="mini-chart"><span></span><span></span><span></span><span></span><span></span></div></div><div class="box"><div class="tiny">Habit streak</div><div class="mini-chart"><span style="height:14px"></span><span style="height:18px"></span><span style="height:28px"></span><span style="height:34px"></span><span style="height:26px"></span></div></div></div>
+        </div>
+        <div class="desk-side"><div class="box dark"><div class="tiny" style="color:#dbcfbf">Reflection score</div><div class="price" style="color:#fff;font-size:24px;margin-top:8px">86</div></div><div class="box"><div class="tiny">Top tags</div><div class="topic-list" style="margin-top:8px"><div class="row"><span>Focus</span><span>12</span></div><div class="row"><span>Rest</span><span>9</span></div><div class="row"><span>Clarity</span><span>8</span></div></div></div></div>
+      </div>
+    </section>
+
+    <section class="bottom">
+      <div class="price-grid">
+        <article class="price-card">
+          <div class="eyebrow">plans</div>
+          <h3>One journal, two paths</h3>
+          <div class="price">$9</div>
+          <div class="tiny">Personal plan — daily prompts, notes, private analytics.</div>
+          <ul class="bullets"><li>Unlimited entries</li><li>Weekly insights</li><li>Mobile + desktop</li></ul>
+        </article>
+        <article class="price-card">
+          <div class="eyebrow">growth</div>
+          <h3>Reflective</h3>
+          <div class="price">$19</div>
+          <div class="tiny">Advanced pattern analysis, quarterly reports, and export tools.</div>
+          <ul class="bullets"><li>Everything in Personal</li><li>Deep trend summaries</li><li>Priority support</li></ul>
+        </article>
+      </div>
+      <div class="faq-grid">
+        <article class="faq-card"><h3>How does Kinto protect privacy?</h3><p class="tiny">End-to-end encryption, optional local-only mode, and private-by-default sharing controls.</p></article>
+        <article class="faq-card"><h3>Which platforms are supported?</h3><p class="tiny">iPhone, Android, macOS, Windows, and any modern browser.</p></article>
+      </div>
+    </section>
+
+    <section class="footer-cta">
+      <div class="eyebrow">final call</div>
+      <h2>Your thoughts deserve a home.</h2>
+      <p class="tiny" style="font-size:11px;margin-bottom:10px">Start writing today. Build a gentle system for reflection and growth.</p>
+      <div class="btn-dark" style="display:inline-flex">Get started</div>
+      <div class="footer-note" style="margin-top:8px">Preview canvas 800×600 with sample data</div>
+    </section>
+  </div>
+</body>
+</html>

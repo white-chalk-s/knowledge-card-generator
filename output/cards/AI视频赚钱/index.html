@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI视频怎么赚钱 — 知识卡片</title>
+  <style>
+    :root {
+      --font-base:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+      --color-bg:#030304; --color-surface:#08090c; --color-surface-2:#0d0f16;
+      --color-card:#0b0c10; --color-card-soft:#11131a;
+      --color-title:#f7f7fb; --color-text:#b4b6c3; --color-muted:#727684;
+      --color-border:rgba(255,255,255,.1); --color-border-strong:rgba(255,255,255,.18);
+      --color-accent:#b9a4ff; --color-accent-2:#8d7cff; --color-success:#58d68d; --color-gold:#d29922;
+      --color-white:#fff; --color-dark-text:#050507;
+      --radius-sm:8px; --radius-md:16px; --radius-lg:24px;
+      --shadow-card:0 20px 70px rgba(0,0,0,.42); --shadow-glow:0 0 80px rgba(137,113,255,.16);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:var(--font-base);background:var(--color-bg);color:var(--color-text);line-height:1.65;padding:2rem}
+    .page-shell{width:min(100%,1180px);margin-inline:auto}
+
+    h1,h2,h3{color:var(--color-title);margin:0}
+    h1{font-size:clamp(1.4rem,3vw,1.8rem);line-height:1.1;letter-spacing:-.02em;margin-bottom:6px}
+    h2{font-size:1.12rem;line-height:1.25;margin-bottom:12px;padding-top:4px}
+    h3{font-size:.92rem;line-height:1.3;margin-bottom:4px}
+    p{margin:0;font-size:.88rem;line-height:1.6}
+    .small{font-size:.76rem;color:var(--color-muted)}
+
+    .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+    .tag{font-size:10px;letter-spacing:.06em;color:var(--color-accent);font-weight:700;background:rgba(137,113,255,.12);padding:3px 10px;border-radius:999px}
+
+    .thesis{background:linear-gradient(135deg,rgba(137,113,255,.08),rgba(88,214,141,.06));border:1px solid rgba(137,113,255,.2);border-radius:var(--radius-md);padding:14px 18px;margin-bottom:20px}
+    .thesis p{margin:0;font-weight:600;color:var(--color-title);font-size:.92rem}
+
+    .hero-img{width:100%;aspect-ratio:21/9;border-radius:var(--radius-md);overflow:hidden;margin-bottom:20px;border:1px solid var(--color-border)}
+    .hero-img img{width:100%;height:100%;object-fit:cover;display:block}
+
+    table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.78rem}
+    thead th{text-align:left;padding:7px 8px;font-weight:700;color:var(--color-muted);border-bottom:1px solid var(--color-border-strong);font-size:10px;letter-spacing:.05em}
+    tbody td{padding:7px 8px;border-bottom:1px solid var(--color-border);vertical-align:top}
+    tbody tr:last-child td{border-bottom:none}
+    tbody tr:hover{background:var(--color-surface-2)}
+    .num{font-family:"Fira Code","Cascadia Code",Consolas,monospace;color:var(--color-success);font-weight:600;font-size:.76rem}
+    .num.blue{color:var(--color-accent)}
+    .num.gold{color:var(--color-gold)}
+
+    .path-card{background:var(--color-card-soft);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:16px 18px;margin-bottom:10px}
+    .path-card h3{display:flex;align-items:center;gap:8px}
+    .path-badge{font-size:10px;padding:2px 8px;border-radius:999px;font-weight:700;letter-spacing:.04em}
+    .badge-fast{background:rgba(88,214,141,.15);color:var(--color-success)}
+    .badge-scale{background:rgba(137,113,255,.15);color:var(--color-accent)}
+    .badge-high{background:rgba(210,153,34,.15);color:var(--color-gold)}
+    .stat-row{display:flex;gap:14px;flex-wrap:wrap;margin:6px 0}
+    .stat-item{font-size:.76rem;color:var(--color-muted)}
+    .stat-item strong{color:var(--color-title)}
+
+    .channel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+    .ch-card{background:var(--color-card-soft);border:1px solid var(--color-border);border-radius:12px;padding:12px;display:flex;gap:10px;align-items:flex-start}
+    .ch-num{width:24px;height:24px;border-radius:6px;flex-shrink:0;display:grid;place-items:center;font-weight:800;font-size:11px;color:#fff;background:var(--color-accent)}
+    .ch-info h3{font-size:.82rem;margin-bottom:2px}
+    .ch-info p{font-size:.73rem;color:var(--color-muted);margin:0}
+
+    .steps{background:var(--color-card-soft);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:14px 18px;margin-bottom:16px}
+    .step{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--color-border);align-items:baseline}
+    .step:last-child{border-bottom:none}
+    .step-num{font-family:"Fira Code","Cascadia Code",Consolas,monospace;font-size:12px;color:var(--color-accent);font-weight:700;flex-shrink:0;min-width:20px}
+
+    .reading{display:grid;gap:8px}
+    .ref{font-size:.8rem;color:var(--color-text);padding:7px 10px;border-left:3px solid var(--color-border);text-decoration:none;display:block;transition:border-color .15s}
+    .ref:hover{border-color:var(--color-accent)}
+
+    .divider{height:1px;background:var(--color-border);margin:20px 0}
+
+    @media(max-width:860px){
+      body{padding:8px}
+      .channel-grid{grid-template-columns:1fr 1fr}
+      table{font-size:.68rem}
+    }
+    @media(max-width:520px){.channel-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <div class="tags">
+      <span class="tag">AI</span><span class="tag">视频</span><span class="tag">副业</span><span class="tag">接单</span>
+    </div>
+    <h1>AI 视频怎么赚钱 + 客户在哪里</h1>
+
+    <div class="thesis">
+      <p>AI 视频赚钱的核心不是"视频做得多好"，而是<strong>你离买单的人有多近</strong>。技术好不如渠道近。</p>
+    </div>
+
+    <div class="hero-img">
+      <img src="https://images.unsplash.com/photo-1536240478700-b869070f9279?w=720&q=80" alt="视频剪辑工作台" loading="lazy">
+    </div>
+
+    <h2>七条赚钱路径</h2>
+    <table>
+      <thead><tr><th>路径</th><th>见效</th><th>月收入</th><th>核心难点</th></tr></thead>
+      <tbody>
+        <tr><td><strong>接单代剪</strong></td><td class="num">1-2周</td><td class="num">2k-8k</td><td>竞争激烈单价低</td></tr>
+        <tr><td><strong>AI视频代生成</strong></td><td class="num">2-4周</td><td class="num blue">3k-15k</td><td>需找到商家客户</td></tr>
+        <tr><td><strong>自营内容号</strong></td><td class="num gold">3-6月</td><td class="num gold">0-50k</td><td>起号慢不确定性强</td></tr>
+        <tr><td><strong>AI+电商带货</strong></td><td class="num">1-3月</td><td class="num blue">3k-30k</td><td>需懂选品投放</td></tr>
+        <tr><td><strong>数字人服务</strong></td><td class="num">2-4周</td><td class="num blue">5k-20k</td><td>客户教育获客</td></tr>
+        <tr><td><strong>卖教程/模板</strong></td><td class="num">1-2月</td><td class="num">不确定</td><td>需流量/营销能力</td></tr>
+        <tr><td><strong>短视频代运营</strong></td><td class="num">1-2月</td><td class="num blue">5k-30k</td><td>需商务+持续交付</td></tr>
+      </tbody>
+    </table>
+
+    <div class="path-card">
+      <h3><span class="path-badge badge-fast">最快见钱</span> 路一：接单代剪辑</h3>
+      <div class="stat-row">
+        <span class="stat-item">淘宝口播 <strong>5-50元/条</strong></span>
+        <span class="stat-item">猪八戒企业片 <strong>500-8000元/项目</strong></span>
+        <span class="stat-item">Fiverr海外 <strong>$50-500/条</strong></span>
+      </div>
+      <p class="small">案例：上班族用剪映AI，晚上剪10条口播，月多赚2000+。海外单价是国内3-5倍。</p>
+    </div>
+
+    <div class="path-card">
+      <h3><span class="path-badge badge-scale">最规模化</span> 路三：自营AI内容号</h3>
+      <div class="stat-row">
+        <span class="stat-item">YouTube白噪音 <strong>月入2万英镑</strong></span>
+        <span class="stat-item">抖音AI萌宠 <strong>日入1000-2000元</strong></span>
+        <span class="stat-item">TikTok <strong>月入$2000-3000</strong></span>
+      </div>
+      <p class="small">YouTube 2025年7月已收紧AI视频变现，需人机结合（真人露脸+AI素材）。</p>
+    </div>
+
+    <div class="path-card">
+      <h3><span class="path-badge badge-high">高客单价</span> 路七：短视频代运营</h3>
+      <div class="stat-row">
+        <span class="stat-item">账号搭建 <strong>2万元</strong></span>
+        <span class="stat-item">脚本 <strong>90元/条</strong></span>
+        <span class="stat-item">拍摄制作 <strong>100元/条</strong></span>
+        <span class="stat-item">年服务费 <strong>28.5万/账号</strong></span>
+      </div>
+      <p class="small">AI提效后一个人接3个账号，年收入30-50万可实现。</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <h2>客户在哪：七条渠道</h2>
+    <div class="channel-grid">
+      <div class="ch-card"><div class="ch-num">1</div><div class="ch-info"><h3>淘宝</h3><p>搜"视频剪辑接单"，开店等客户搜，月付款超1000的品类需求真实</p></div></div>
+      <div class="ch-card"><div class="ch-num">2</div><div class="ch-info"><h3>小红书</h3><p>搜"求推荐视频剪辑"，评论区发案例→私信，不要发"我可以"</p></div></div>
+      <div class="ch-card"><div class="ch-num">3</div><div class="ch-info"><h3>Fiverr/Upwork</h3><p>海外客户单价$50-500/条，是国内3-5倍，前5单低30%换好评</p></div></div>
+      <div class="ch-card"><div class="ch-num">4</div><div class="ch-info"><h3>电商卖家</h3><p>入驻淘宝/抖音服务市场，话术：先做1条免费看效果</p></div></div>
+      <div class="ch-card"><div class="ch-num">5</div><div class="ch-info"><h3>BOSS直聘</h3><p>搜"视频剪辑兼职"，找每月稳定派单的甲方，月固定3k-8k</p></div></div>
+      <div class="ch-card"><div class="ch-num">6</div><div class="ch-info"><h3>即刻/知识星球</h3><p>找卖了500份以上的专栏作者，帮他们把内容变短视频</p></div></div>
+      <div class="ch-card"><div class="ch-num">7</div><div class="ch-info"><h3>本地商家</h3><p>大众点评找排名50-100的店，抖音没内容的=客户，一单3k-10k</p></div></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h2>技术人的最优切入</h2>
+    <div class="steps">
+      <div class="step"><span class="step-num">STEP 1</span><span>先用一周自己做AI视频号验证全流程</span></div>
+      <div class="step"><span class="step-num">STEP 2</span><span>把制作流程模板化 → 可复制的SOP</span></div>
+      <div class="step"><span class="step-num">STEP 3</span><span>去卖"我能用AI帮商家一天出30条带货视频"</span></div>
+    </div>
+    <p class="small" style="text-align:center;margin-bottom:18px">护城河不是"会剪"，是<strong style="color:var(--color-title)">懂AI工具链+能自动化+有技术审美</strong></p>
+
+    <div class="divider"></div>
+
+    <h2>延伸阅读</h2>
+    <div class="reading">
+      <a class="ref" href="https://book.douban.com/subject/26380638/" target="_blank" rel="noopener">《Show Your Work!》Austin Kleon — 把创作过程变成获客内容</a>
+      <a class="ref" href="https://book.douban.com/subject/25759428/" target="_blank" rel="noopener">《百万富翁快车道》MJ DeMarco — 别用时间换钱，做可规模化的事</a>
+      <a class="ref" href="https://www.aigc.cn/ai-sideline" target="_blank" rel="noopener">AIGC导航副业项目合集 — 大量AI视频赚钱案例</a>
+    </div>
+  </div>
+</body>
+</html>

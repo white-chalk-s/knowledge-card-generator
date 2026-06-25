@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>为什么忙的时候效率高，空闲时反而读不进去 — 知识卡片</title>
+  <style>
+    :root {
+      --bg:#f6f2eb; --surface:#fffdf9; --surface-2:#f3eadc;
+      --title:#231e19; --text:#5b544d; --muted:#8b8278;
+      --accent:#c4934e; --border:#e5dac7; --dark:#1d1916;
+      --shadow:0 16px 40px rgba(50,38,22,.08); --radius:22px;
+      --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+      --font-serif:Georgia,"Times New Roman","Songti SC","Noto Serif SC",serif;
+      --font-mono:"Fira Code","Cascadia Code",Consolas,monospace;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:var(--font-sans);background:var(--bg);color:var(--text);line-height:1.7;padding:2rem}
+    .canvas{width:800px;margin:0 auto;background:linear-gradient(180deg,#f8f4ee,#f4efe7);padding:28px 32px 24px;border-radius:24px;border:1px solid var(--border);box-shadow:var(--shadow)}
+
+    h1,h2,h3{font-family:var(--font-serif);color:var(--title);margin:0}
+    h1{font-size:30px;line-height:1.08;letter-spacing:-.03em;margin-bottom:4px}
+    h2{font-size:18px;line-height:1.2;margin-bottom:10px}
+    h3{font-size:15px;line-height:1.3;margin-bottom:4px}
+    p{margin:0;font-size:14px;line-height:1.6}
+    .small{font-size:12px;color:var(--muted)}
+
+    .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:6px}
+
+    .subtitle{font-size:14px;color:var(--text);line-height:1.6;border-left:3px solid var(--accent);padding-left:14px;margin-bottom:18px}
+
+    .img-hero{width:100%;aspect-ratio:21/9;border-radius:18px;overflow:hidden;margin-bottom:18px;border:1px solid var(--border)}
+    .img-hero img{width:100%;height:100%;object-fit:cover;display:block}
+
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+    .point-card{background:var(--surface-2);border:1px solid var(--border);border-radius:18px;padding:16px}
+    .point-card .num{font-family:var(--font-serif);font-size:32px;color:var(--accent);line-height:1;font-weight:700;margin-bottom:6px}
+
+    .paradox{background:var(--dark);color:#d4c9b8;border-radius:18px;padding:18px;margin-bottom:18px;font-size:13px;line-height:1.7;font-family:var(--font-mono);overflow-x:auto;white-space:pre-wrap}
+    .paradox strong{color:#f0e6d3}
+
+    .highlight-box{background:linear-gradient(135deg,#fdf8f0,#faf3e6);border:1px solid var(--accent);border-radius:18px;padding:16px 20px;margin-bottom:18px;text-align:center}
+    .highlight-box p{font-family:var(--font-serif);font-size:17px;color:var(--title);font-weight:700;margin:0}
+
+    .tips{margin-bottom:14px}
+    .tip{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:12px 0;border-bottom:1px solid #eee4d5;align-items:start}
+    .tip:last-child{border-bottom:none}
+    .tip-num{width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:var(--font-serif);font-size:16px}
+
+    .books{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .book{display:flex;gap:12px;padding:14px;border:1px solid var(--border);border-radius:16px;background:var(--surface-2)}
+    .book-cover{width:48px;height:68px;border-radius:4px;background:var(--accent);flex-shrink:0;display:grid;place-items:center;font-family:var(--font-serif);color:#fff;font-size:11px;text-align:center;line-height:1.2;padding:4px}
+    .book-info p{font-size:12px;margin:0}
+
+    .divider{height:1px;background:var(--border);margin:16px 0}
+
+    .img-inline{width:100%;aspect-ratio:3/2;border-radius:14px;overflow:hidden;margin:8px 0 14px;border:1px solid var(--border)}
+    .img-inline img{width:100%;height:100%;object-fit:cover;display:block}
+
+    @media(max-width:860px){
+      body{padding:8px}
+      .canvas{width:100%;padding:18px 16px}
+      .grid-2,.books{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="eyebrow">心理学 · 时间管理</div>
+    <h1>为什么忙的时候效率高，<br>空闲时反而读不进去</h1>
+
+    <p class="subtitle">
+      忙 = 时间被"墙"围住了，边界清晰，决策成本低，拿起就能做。<br>
+      闲 = 墙没了，面对一整片空旷，每一步都要重新决策——决策瘫痪 + 零惯性 + 时间贬值，三杀。
+    </p>
+
+    <div class="img-hero">
+      <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=720&q=80" alt="安静阅读角落" loading="lazy">
+    </div>
+
+    <h2>忙的时候，为什么效率反而高</h2>
+    <div class="grid-2">
+      <div class="point-card">
+        <div class="num">01</div>
+        <h3>帕金森定律</h3>
+        <p>工作量会膨胀到填满你给它的容器。忙的人给看书只留了 30 分钟缝隙——刚好够用，一分不浪费。闲的人有 2 小时——看书磨 2 小时。</p>
+      </div>
+      <div class="point-card">
+        <div class="num">02</div>
+        <h3>时间边界清晰</h3>
+        <p>忙人的一天每块时间是预定义的，到了那块不用做决策，直接执行。闲人的空白每一天都要重新决策"现在看书还是再刷 10 分钟手机"。</p>
+      </div>
+      <div class="point-card">
+        <div class="num">03</div>
+        <h3>惯性效应</h3>
+        <p>已经在动了 → 继续动很容易（动摩擦小）。忙的人一直在做事，拿起书只是换一个轨道，不需要克服静摩擦力。</p>
+      </div>
+      <div class="point-card">
+        <div class="num">04</div>
+        <h3>对比快感</h3>
+        <p>开会间隙翻 10 页 = "我赚到了"，是偷来的快乐。空闲时翻 10 页 = "我才看了 10 页，好废"，是杯水车薪。</p>
+      </div>
+    </div>
+
+    <div class="img-inline">
+      <img src="https://images.unsplash.com/photo-1501139083538-0139583c060f?w=600&q=80" alt="沙漏与时间" loading="lazy">
+    </div>
+
+    <h2>闲的时候，为什么反而读不进去</h2>
+    <div class="grid-2">
+      <div class="point-card">
+        <div class="num">01</div>
+        <h3>决策瘫痪</h3>
+        <p>有 8 小时 → "应该选一本最重要的书" → 选哪本？够不够好？→ 30 分钟过去了还没翻开。<strong>选择越多，行动越少。</strong></p>
+      </div>
+      <div class="point-card">
+        <div class="num">02</div>
+        <h3>时间贬值</h3>
+        <p>1 小时完成一件事 → 紧迫感 → 专注。1 天完成同一件事 → 不着急 → 拖到最后 1 小时。空闲时每一分钟都不值钱，可以随便浪费。</p>
+      </div>
+      <div class="point-card">
+        <div class="num">03</div>
+        <h3>零外部压力 → 零启动</h3>
+        <p>忙的时候外部世界在推你：deadline、消息、会议。空闲时没有任何外力，只能自己推自己——人极度不擅长自己推自己。</p>
+      </div>
+      <div class="point-card">
+        <div class="num">04</div>
+        <h3>看书变成"应该"而非"想"</h3>
+        <p>忙时看书 = 犒赏自己，是反抗，是抢回来的自由。闲时看书 = 完成任务，是"我都闲成这样了还不学习？"。<strong>同一本书，前者是奖励，后者是惩罚。</strong></p>
+      </div>
+    </div>
+
+    <h2>核心悖论</h2>
+    <div class="paradox">
+想看书 ≠ 能看书
+
+想看书 = 身份系统受到威胁，需要安抚
+能看书 = 需要时间约束 + 外部压力 + 低决策成本
+
+闲 → 产生看书的欲望（焦虑驱动）
+闲 → 剥夺看书的能力（无约束、无惯性、高决策成本）
+
+忙 → 不产生看书的欲望（身份稳固，不需要安抚）
+忙 → 反而具备了看书的能力（有约束、有惯性、低决策成本）
+
+<strong>忙的时候不想看但能看，闲的时候想看但不能看。</strong>
+    </div>
+
+    <div class="highlight-box">
+      <p>「同一本书，忙时是奖励，闲时是惩罚。」</p>
+    </div>
+
+    <h2>怎么破解</h2>
+    <div class="tips">
+      <div class="tip">
+        <div class="tip-num">1</div>
+        <div>
+          <h3>制造假墙</h3>
+          <p class="small">跟自己说"只读 25 分钟，然后就去刷剧"。边界一旦存在，帕金森定律就帮你干活。</p>
+        </div>
+      </div>
+      <div class="tip">
+        <div class="tip-num">2</div>
+        <div>
+          <h3>降低决策成本</h3>
+          <p class="small">先决定"就看手边最近那本"，不选。翻开就行。</p>
+        </div>
+      </div>
+      <div class="tip">
+        <div class="tip-num">3</div>
+        <div>
+          <h3>从零到一的五分钟</h3>
+          <p class="small">最难的是翻开。跟自己说只看 5 页。翻开了基本就会读下去。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h2>延伸阅读</h2>
+    <div class="books">
+      <div class="book">
+        <div class="book-cover">拖延<br>心理学</div>
+        <div class="book-info">
+          <h3>《拖延心理学》</h3>
+          <p class="small">Jane Burka — 不是教你勤奋，是教你理解"为什么不行动"</p>
+        </div>
+      </div>
+      <div class="book">
+        <div class="book-cover">思考<br>快与慢</div>
+        <div class="book-info">
+          <h3>《思考，快与慢》</h3>
+          <p class="small">丹尼尔·卡尼曼 — 系统1和系统2，解释了为什么做决策本身就在消耗你</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

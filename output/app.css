@@ -120,16 +120,15 @@ body{display:flex}
 .tpl-card-preview .tpl-no-preview{
   font-size:.7rem;color:var(--color-text-tertiary);text-align:center;padding:12px;
 }
-.tpl-card-preview .tpl-upload-overlay{
-  position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;
-  align-items:center;justify-content:center;opacity:0;transition:opacity .15s;
-  pointer-events:none;z-index:2;
+.tpl-card-preview .tpl-upload-btn{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  border:none;border-radius:8px;padding:6px 14px;
+  background:rgba(0,0,0,.55);color:#fff;font-size:.72rem;font-weight:600;
+  cursor:pointer;opacity:0;transition:opacity .15s;z-index:2;
+  font-family:var(--font-sans);letter-spacing:.02em;
 }
-.tpl-card:hover .tpl-upload-overlay{opacity:1}
-.tpl-upload-overlay span{
-  color:#fff;font-size:.75rem;font-weight:500;
-  background:rgba(255,255,255,.15);padding:5px 12px;border-radius:6px;
-}
+.tpl-card:hover .tpl-upload-btn{opacity:1}
+.tpl-upload-btn:hover{background:rgba(0,0,0,.75)}
 
 /* Template tag filter */
 .tpl-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
