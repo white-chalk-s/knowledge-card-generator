@@ -8,10 +8,13 @@ Python Flask + 纯 HTML/CSS/JS，零数据库，JSON 文件存储。
 
 ## 功能
 
-- **8 套模板**：产品介绍 / 极简报告 / 技术深度 / 杂志长文 / 农学家门户 / 通用门户线框 / 通用门户页面 / 粗黑招聘海报
+- **8 套模板**（网页 / 杂志 / 海报 / PPT 四类标签筛选）
+- **双列侧边栏**（Stripe Dashboard 风格）：260px 卡片导航，580px 展开设置面板
 - **双展示模式**：网页全屏 / 16:9 PPT / 4:3 PPT（CSS transform 等比缩放）
-- **Stripe Docs 风格布局**：持久化左侧边栏 + 内容区居中，移动端自适应折叠
-- **设置页**：模板预览与默认切换、卡片图片管理（上传/替换/删除）、图标库浏览与复制
+- **模板预览图**：上传或直接丢图到 `previews/` 目录自动匹配（命名 `模板id.png`）
+- **图标库**：按风格浏览 + 点击复制 SVG 源码
+- **右键删除**：卡片/模板/图片右键弹出红色删除按钮 → 确认弹窗
+- **移动端响应式**：≤768px 侧边栏折叠
 
 ## 快速开始
 
@@ -31,12 +34,12 @@ python server.py
 ├── templates/             # HTML 模板（8 套）
 ├── icons/                 # SVG 图标库
 ├── output/
-│   ├── index.html         # 首页 shell（侧边栏 + iframe）
-│   ├── settings.html      # 设置页（模板/图片/图标）
-│   ├── app.css            # 全局样式
+│   ├── index.html         # 首页 shell（双列侧边栏 + iframe）
+│   ├── app.css            # 全局样式（CSS 变量体系）
 │   ├── app.js             # 全局脚本
 │   ├── settings.json      # 模板注册表 + 默认设置
 │   ├── cards-index.json   # 卡片索引
+│   ├── previews/          # 模板预览图（800×600 推荐，自动匹配）
 │   └── cards/             # 卡片文件（每张一个目录）
 │       └── <id>/
 │           ├── index.html # 卡片 HTML
